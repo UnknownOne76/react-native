@@ -16,6 +16,7 @@ import {
   View,
 } from 'react-native';
 import DataCenter from './screens/Data';
+import { Detailed } from './screens/Detail';
 import Home from './screens/Home';
 
 const windowWidth = Dimensions.get('window').width;
@@ -31,6 +32,7 @@ const App = () => {
       <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name='Home' component={Home}/>
         <Stack.Screen name='Data' component={DataCenter}/>
+        <Stack.Screen name="Detail" component={Detailed} />
       </Stack.Navigator>
       </NavigationContainer>
     </View>
