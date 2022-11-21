@@ -12,8 +12,10 @@ const user = new Schema({
         type: String,
         required: true
     },  
-    img: String, 
-    job: String,     
+    img: {
+       type: String,
+       required: true
+    },     
 }); 
 
 const User = model('Users' , user); 
