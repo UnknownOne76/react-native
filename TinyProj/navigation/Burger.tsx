@@ -11,7 +11,7 @@ export const BurgerBar = () => {
     return (
         <Drawer.Navigator drawerContent={props => <CustomDrawer {...props} />} screenOptions={{
             headerShown: false, drawerActiveBackgroundColor: "#2F9FF8",drawerActiveTintColor: "white", drawerInactiveTintColor: "black",
-        }}>
+        }} initialRouteName="Top Stories">
         <Drawer.Screen name='Top Stories' options={{drawerIcon: ({color}) => (<Ionicons name='home' size={24} color={color}/>)}} component={Home}/>
         <Drawer.Screen name='Around The World' options={{drawerIcon: ({color}) => (<Ionicons name='globe' size={24} color={color}/>)}} component={Home}/> 
         <Drawer.Screen name='Business'  options={{drawerIcon: ({color}) => (<Ionicons name='briefcase' size={24} color={color}/>)}} component={Home}/>

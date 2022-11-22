@@ -1,7 +1,7 @@
 const exp = require('express') , mongo = require('mongoose');
 const userRt = require('./routes/userData');
 const postRt = require('./routes/postRouter'); 
-const app = exp() , port = 3030 , url = "mongodb://127.0.0.1:27017/asterNews";
+const app = exp() , port = 3030 , url = "mongodb+srv://uk_76:uk_76@firstdatabase.asyfgny.mongodb.net/?retryWrites=true&w=majority";
 app.use(exp.json());
 app.use(userRt , postRt); 
 

@@ -1,3 +1,4 @@
+import { Platform } from "react-native";
 import { View , Text , Image, TouchableHighlight } from "react-native"
 import tw from 'twrnc';
 
@@ -12,7 +13,7 @@ export const Header = ({navigation}: any) => {
     }; 
 
     return (
-        <View style={tw`flex flex-row w-full p-5`}>
+        <View style={Platform.OS === 'ios' ? tw`flex flex-row w-full pt-10 pl-5` : tw`flex flex-row w-full m-5`}>
            <TouchableHighlight  activeOpacity={0.6} underlayColor="#FFFFFF" onPress={() => navigation.openDrawer()}>
            <Image source={require("../../images/menu.jpg")} style={{width: 24, height: 24, marginRight: 10}}/>
            </TouchableHighlight>

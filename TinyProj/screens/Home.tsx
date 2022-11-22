@@ -3,6 +3,7 @@ import { Button, Dimensions, SectionList, Text, View } from "react-native"
 import { TouchableOpacity } from "react-native-gesture-handler";
 import tw from 'twrnc';
 import AXIOS from "../api";
+import { windowWidth } from "../utils/windowSize";
 import Header from "./layout/header";
 
 type Props = {
@@ -44,8 +45,8 @@ export const Home = ({navigation }: Props) => {
   };
 
     return (
-    <View style={{flex: 1, justifyContent: "center" , alignItems: "center" , backgroundColor: "white"}}>
-      <SectionList sections={st !== null ? data : []} renderItem={renderItem} renderSectionHeader={({section: { title }}) => ( <Text> {title} </Text>)} ListHeaderComponent={<Header navigation={navigation}/>}/>
+    <View style={{flex: 1, justifyContent: "center" , alignItems: "center" , backgroundColor: "white"}}> 
+      <SectionList sections={st !== null ? data : []} renderItem={renderItem} renderSectionHeader={({section: { title }}) => ( <Text>{title}</Text>)} ListHeaderComponent={<Header navigation={navigation}/>}/>
     </View>
     );
 }; 
