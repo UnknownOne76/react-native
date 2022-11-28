@@ -23,14 +23,27 @@ const ls = new Schema({
      }, 
      author: {
          type: Schema.ObjectId, 
-         ref: "Users", 
-         required: true, 
+         ref: "Users",  
+         required: true,
+     }, 
+     comments: {
+      author: {
+        type: Schema.ObjectId,
+        ref: "Users", 
+      }, 
+      comment: {
+      type: String,
+      }, 
+      replies: [{
+         type: Schema.ObjectId, 
+         ref: "Comments", 
+      }]
      }, 
      type: {
          type: String, 
          required: true
      }
-}, { timestamps: true }); 
+}, { timestamps: true });
 
 const newsPosts = model('Posts' , ls); 
 module.exports = newsPosts; 

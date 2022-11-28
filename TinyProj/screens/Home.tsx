@@ -1,54 +1,81 @@
-import { useState } from "react";
-import { Button, Dimensions, SectionList, Text, View } from "react-native"
+import { useEffect, useState } from "react";
+import Ionicons from 'react-native-vector-icons/Feather'; 
+import { FlatList, Text, View , Image } from "react-native"
 import { TouchableOpacity } from "react-native-gesture-handler";
 import tw from 'twrnc';
 import AXIOS from "../api";
-import { windowWidth } from "../utils/windowSize";
-import Header from "./layout/header";
 
 type Props = {
    route: any;
    navigation: any;        
 }
 
-export const Home = ({navigation }: Props) => {  
-
-  const [st , setSt] = useState<any>(null); 
-
-//   AXIOS.get('posts').then((res) => {
-//       setSt(res.data.data);  
-//  }).catch(err => console.log(err)); 
-
-  const data = [
-     {
-       title: "Top stories for you",
-       data: ['data']
-     }
-  ]
+export const Home = ({navigation }: Props) => {
   
-  const Item = ({item}: any) => (
-    <View>
-    <TouchableOpacity onPress={() => console.log('hmm')}>  
-      <Text>{item.title}</Text>
-      <Text>{item.txt}</Text>
-      <Button title="tap me" onPress={() => console.log('bro')}/>
-      </TouchableOpacity>
+  const [news , setNews ] = useState<any>(); 
+
+  useEffect(() => {
+    AXIOS.get('posts').then((res) => {
+      setNews(res.data.data);  
+    }).catch(err => console.log(err));
+  }, []);  
+
+  const DATA = [
+    {
+      id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
+      title: 'All',
+    },
+    {
+      id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
+      title: 'Android',
+    },
+    {
+      id: '58694a0f-3da1-471f-bd96-145571e29d72',
+      title: 'Cricket',
+    },
+    {
+      id: '58694a0f-3da1-471f-bd96-145571e29d98', 
+      title: 'Iphone' 
+    }
+  ];
+
+  const Item = ({ title }: any) => (
+    <View style={tw`flex`}>
+      <Text>{title}</Text>
     </View>
   );
- 
-  const renderItem = ({item}: any) => {
-    return ( 
-      <View>
-      {st !== null ? <Item item={item}/> : <Text> Loading. </Text>}
-      </View>
-    ); 
-  };
+
+  const renderItem = ({ item }: any) => (
+    <Item title={item.title} />
+  );    
 
     return (
-    <View style={{flex: 1, justifyContent: "center" , alignItems: "center" , backgroundColor: "white"}}> 
-      <SectionList sections={st !== null ? data : []} renderItem={renderItem} renderSectionHeader={({section: { title }}) => ( <Text>{title}</Text>)} ListHeaderComponent={<Header navigation={navigation}/>}/>
+    <View style={tw`flex flex-col w-full justify-center items-center bg-[#E5E5E5]`}> 
+    <View style={tw`flex flex-col justify-start items-start w-11/12`}> 
+    <Text style={tw`text-[#072D4B] text-sm`}>Top Stories for you</Text>
+    <View style={tw`flex w-3/5 ml-2`}> 
+    <FlatList data={DATA} renderItem={renderItem} keyExtractor={item => item.id} />
     </View>
-    );
-}; 
+    </View>
+    <View style={tw`flex flex-col w-11/12 justify-center items-center bg-white m-5`}> 
+    {news !== undefined && news.length !== 0 ? news.map((x: any , i: number) => {
+      return <TouchableOpacity key={i} onPress={() => navigation.navigate('Spec' , {id: x._id})}>    
+     <View style={tw`flex flex-col w-11/12 justify-start items-center m-5`}> 
+     <Text style={tw`text-[#072D4B] text-sm mb-2 mr-6`}>{x.title}</Text>
+     <Text style={tw`text-[#072D4B] text-sm opacity-50 mb-5`}>{x.descrip}</Text>
+     <Image source={{uri: x.postImg}} style={{width: 250 , height: 150}}/>
+     </View>
+     <View style={tw`flex flex-row justify-start items-start w-auto pl-10 pb-5`}>
+        <Text style={tw`text-[#072D4B] opacity-40`}>Mint</Text>
+        <Text style={tw`text-[#072D4B] opacity-40 pl-10`}>{x.createdAt.slice(0, 10)}</Text>
+       <Ionicons name='share' size={16} color={"#0768B5"} style={tw`pl-20`}/>
+       <Ionicons name='pocket' size={16} color={"#0768B5"} style={tw`pl-10`}/>
+     </View>
+     </TouchableOpacity>
+    }): <View><Text>Loading...</Text></View>}
+    </View>
+    </View>
+    )
+};  
 
 export default Home;

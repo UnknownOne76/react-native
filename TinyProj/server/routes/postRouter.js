@@ -3,7 +3,7 @@ const newsPosts = require('../models/Posts'), postRt = exp.Router();
 
 postRt.get("/posts", async (req, res) => {
     if (req.body) { 
-      const posts = await newsPosts.find({}).sort({_id: -1}).populate("author");
+      const posts = await newsPosts.find({}).sort({_id: -1}).populate("author").populate('comments');
       res.send({
          data: posts,
       });
@@ -15,7 +15,7 @@ postRt.get("/posts", async (req, res) => {
   }) 
 
 postRt.get('/spec/:id' , async (req , res) => {
-   const data = await blogPosts.findOne({_id: req.params['id']}).populate("author");  
+   const data = await newsPosts.findOne({_id: req.params['id']}).populate("author").populate('comments');  
    if ( data ) {
      res.send(data); 
    } 
@@ -26,14 +26,16 @@ postRt.get('/spec/:id' , async (req , res) => {
 })
 
 postRt.post("/post", async (req, res) => {
-   const { title, descrip, txt , postImg, userId } = req.body;
+   const { title, descrip, txt , postImg, userId , comments , type } = req.body;
    try {
-     await blogPosts.create({
+     await newsPosts.create({
        title: title,
        descrip: descrip,
        txt: txt,
        postImg: postImg,
        author: userId,
+       comments: comments, 
+       type: type
      });
      res.send({
        message: "Post added",

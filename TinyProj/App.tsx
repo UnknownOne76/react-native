@@ -2,24 +2,53 @@ import { NavigationContainer } from '@react-navigation/native';
 import { useEffect } from 'react';
 import * as React from 'react'; 
 import {View} from 'react-native';
-import FsContextPrv from './cont/fsCont';
+import FsContextPrv, { FsContext } from './cont/fsCont';
 import BurgerBar from './navigation/Burger';
-import { Footer } from './screens';
+import { Footer, Header, SignIn, SignUp } from './screens';
 import { windowHeight, windowWidth } from './utils/windowSize';
 import SplashScreen from 'react-native-splash-screen';
-
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import User from './screens/Prof';
+import Specific from './screens/Spec';
 
 const App = () => {
 
   useEffect(() => {
      SplashScreen.hide(); 
-  }, [])
+  }, []) 
+
+  const Stack = createNativeStackNavigator<any>(); 
+
+  const Navigator = () => {
+
+    const fsCont = React.useContext(FsContext);
+    console.log(`User: ${fsCont?.isLogged}`); 
+
+
+     if (fsCont?.isLogged) {
+       return (
+          <Stack.Navigator initialRouteName='HomeScreen'>
+            <Stack.Screen name="HomeScreen" component={BurgerBar} options={{ header: (e: any) => <Header navigation={e.navigation} />}} />
+            <Stack.Screen name="User" component={User} options={{ headerShown: false }} />
+            <Stack.Screen name="Spec" component={Specific} options={{header: (e: any) => <Header navigation={e.navigation}/>}}/>
+          </Stack.Navigator>
+       )
+     }
+     else {
+       return (
+          <Stack.Navigator initialRouteName='Login'>
+            <Stack.Screen name="Login" component={SignIn} />
+            <Stack.Screen name="Register" component={SignUp} /> 
+          </Stack.Navigator>
+       )
+     }
+  }
 
   return (
     <FsContextPrv> 
     <View style={{flex: 1 , width: windowWidth , height: windowHeight}}>
       <NavigationContainer> 
-      <BurgerBar />
+      <Navigator />
       </NavigationContainer>
       <Footer />
     </View>

@@ -2,7 +2,6 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import Ionicons from 'react-native-vector-icons/Feather'; 
 import CustomDrawer from '../comps/customDrawer';
 import Home from '../screens/Home';
-import User from '../screens/Prof';
 
 export const BurgerBar = () => {
 
@@ -21,7 +20,6 @@ export const BurgerBar = () => {
         <Drawer.Screen name='Discussion'  options={{drawerIcon: ({color}) => (<Ionicons name='message-circle' size={24} color={color}/>)}} component={Home}/>
         <Drawer.Screen name='Notification'  options={{drawerIcon: ({color}) => (<Ionicons name='bell' size={24} color={color}/>)}} component={Home}/>
         <Drawer.Screen name='News Feed Settings'  options={{drawerIcon: ({color}) => (<Ionicons name='settings' size={24} color={color}/>)}} component={Home}/>
-        <Drawer.Screen name='User Profile'  options={{drawerIcon: ({color}) => (<Ionicons name='user' size={24} color={color}/>)}} component={User}/>
         </Drawer.Navigator>
     )
 }; 
