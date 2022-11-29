@@ -4,6 +4,7 @@ import { FlatList, Text, View , Image } from "react-native"
 import { TouchableOpacity } from "react-native-gesture-handler";
 import tw from 'twrnc';
 import AXIOS from "../api";
+import moment from "moment";
 
 type Props = {
    route: any;
@@ -67,7 +68,7 @@ export const Home = ({navigation }: Props) => {
      </View>
      <View style={tw`flex flex-row justify-start items-start w-auto pl-10 pb-5`}>
         <Text style={tw`text-[#072D4B] opacity-40`}>Mint</Text>
-        <Text style={tw`text-[#072D4B] opacity-40 pl-10`}>{x.createdAt.slice(0, 10)}</Text>
+        <Text style={tw`text-[#072D4B] opacity-40 pl-10`}>{moment(x.createdAt).fromNow()}</Text>
        <Ionicons name='share' size={16} color={"#0768B5"} style={tw`pl-20`}/>
        <Ionicons name='pocket' size={16} color={"#0768B5"} style={tw`pl-10`}/>
      </View>
