@@ -25,6 +25,16 @@ postRt.get('/spec/:id' , async (req , res) => {
    }
 })
 
+postRt.post('/addCmt/:id' , async (req , res) => {
+    const { author , txt } = req.body; 
+    await newsPosts.updateOne({_id: req.params['id']} , {$push: {comments: {
+        author: author, 
+        comment: txt,
+        replies: [],
+    }}}).then(res => console.log(res)).catch(err => console.log(err)); 
+    res.send('Successfully Sent.'); 
+})
+
 postRt.post("/post", async (req, res) => {
    const { title, descrip, txt , postImg, userId , comments , type } = req.body;
    try {

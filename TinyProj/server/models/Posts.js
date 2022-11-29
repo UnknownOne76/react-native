@@ -26,19 +26,21 @@ const ls = new Schema({
          ref: "Users",  
          required: true,
      }, 
-     comments: {
+     comments: [{
       author: {
         type: Schema.ObjectId,
         ref: "Users", 
+        required: true
       }, 
       comment: {
       type: String,
+      required: true
       }, 
       replies: [{
          type: Schema.ObjectId, 
-         ref: "Comments", 
+         ref: "Comments",
       }]
-     }, 
+     }], 
      type: {
          type: String, 
          required: true

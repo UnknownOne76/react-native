@@ -2,7 +2,7 @@ const mongo = require('mongoose');
 
 const { Schema , model } = mongo;
 
-const cmt = new Schema({
+const commentSchema = new Schema({
         author: {
             type: Schema.ObjectId, 
             ref: "Users", 
@@ -10,8 +10,9 @@ const cmt = new Schema({
         comment: {
             type: String,
         },    
-});
+        reply: [commentSchema]
+}, {timestamps: true});
 
-const cmts = model("Comments" , cmt);
+const cmts = model("Comments" , commentSchema);
  
 module.exports = cmts;

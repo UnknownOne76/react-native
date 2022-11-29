@@ -14,7 +14,7 @@ export const Header = ({navigation}: any) => {
     }; 
 
     return (
-        <View style={Platform.OS === 'ios' ? tw`flex flex-row w-full pt-10 pl-5` : tw`flex flex-row w-full m-5`}>
+        <View style={Platform.OS === 'ios' ? tw`flex flex-row w-full pt-10 pl-5 bg-white` : tw`flex flex-row w-full m-5`}>
            <TouchableHighlight  activeOpacity={0.6} underlayColor="#FFFFFF" onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
            <Image source={require("../../images/menu.jpg")} style={{width: 24, height: 24, marginRight: 10}}/>
            </TouchableHighlight>
@@ -23,7 +23,6 @@ export const Header = ({navigation}: any) => {
            <TouchableHighlight activeOpacity={0.6}  underlayColor="#FFFFFF" onPress={() => navigation.navigate('User')}> 
            <User />
            </TouchableHighlight>
-          
         </View>
     )
 };

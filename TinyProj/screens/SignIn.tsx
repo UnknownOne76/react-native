@@ -12,7 +12,7 @@ export const SignIn = ({navigation}: any) => {
 
     const signIn = async () => {
         if ( email !== '' && pass !== '') {
-            await AXIOS.post('/login' , {
+            await AXIOS.post('login' , {
                 email: email, 
                 password: pass
             }).then(async (res) => {
@@ -44,8 +44,8 @@ export const SignIn = ({navigation}: any) => {
             <View style={tw`flex flex-col justify-center items-center w-2/4`}> 
               <Text style={tw`font-bold text-2xl`}>Sign in Center</Text>
             </View>
-            <TextInput style={tw`bg-white text-black m-5 rounded-full p-2`} placeholder="Your email" onChangeText={text => setEmail(text)} value={email}/>
-            <TextInput style={tw`bg-white text-black m-5 rounded-full p-2`} placeholder="Your password" onChangeText={text => setPass(text)} value={pass}/>
+            <TextInput style={tw`bg-white text-black m-5 rounded-full p-2`} placeholder="your email" onChangeText={text => setEmail(text)} value={email} autoCapitalize='none' placeholderTextColor={"gray"}/>
+            <TextInput style={tw`bg-white text-black m-5 rounded-full p-2`} placeholder="your password" onChangeText={text => setPass(text)} value={pass} autoCapitalize='none' placeholderTextColor={"gray"}/>
             <Button title='Sign in' onPress={() => signIn()}/>
             <Button title='Sign up' onPress={() => navigation.navigate('Register')}/>
         </View>

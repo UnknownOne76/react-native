@@ -19,7 +19,7 @@ export const SignUp = ({navigation}: any) => {
                return Alert.alert(`That's the longest name i've ever seen.`);
             }
             else {
-                await AXIOS.post('/users' , {
+                await AXIOS.post('users' , {
                     name: name, 
                     email: email, 
                     password: pass, 
@@ -51,10 +51,10 @@ export const SignUp = ({navigation}: any) => {
         <View style={tw`flex flex-col justify-center items-center w-full h-full`}>
             <View style={tw`flex flex-col justify-center items-center w-2/4`}>
             <Text style={tw`font-bold text-2xl`}>Sign Up Center</Text>
-            <TextInput style={tw`bg-white text-black m-5 rounded-full p-2`} placeholder="Your name" value={name} onChangeText={text => setName(text)}/>
-            <TextInput style={tw`bg-white text-black m-5 rounded-full p-2`} placeholder="Your email" value={email} onChangeText={text => setEmail(text)}/>
-            <TextInput style={tw`bg-white text-black m-5 rounded-full p-2`} placeholder="Your password" value={pass} onChangeText={text => setPass(text)}/>
-            <TextInput style={tw`bg-white text-black m-5 rounded-full p-2`} placeholder="Your Photo" value={photo} onChangeText={text => setPhoto(text)}/>
+            <TextInput style={tw`bg-white text-black m-5 rounded-full p-2`} placeholder="Your name" value={name} onChangeText={text => setName(text)} autoCapitalize='none' placeholderTextColor={"gray"}/>
+            <TextInput style={tw`bg-white text-black m-5 rounded-full p-2`} placeholder="Your email" value={email} onChangeText={text => setEmail(text)} autoCapitalize='none' placeholderTextColor={"gray"}/>
+            <TextInput style={tw`bg-white text-black m-5 rounded-full p-2`} placeholder="Your password" value={pass} onChangeText={text => setPass(text)} autoCapitalize='none' placeholderTextColor={"gray"}/>
+            <TextInput style={tw`bg-white text-black m-5 rounded-full p-2`} placeholder="Your Photo" value={photo} onChangeText={text => setPhoto(text)} autoCapitalize='none' placeholderTextColor={"gray"}/>
             <Button title="Sign up" onPress={() => signUp()}/>
             </View>
             <Text style={tw`font-bold text-2xl mb-5`}>Already have an account?</Text>

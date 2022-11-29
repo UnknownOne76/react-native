@@ -1,13 +1,18 @@
-import { Text, View , Image } from "react-native"
+import { Text, View , Image, TouchableOpacity, Alert } from "react-native"
 import AXIOS from "../api";
+import Ionicons from 'react-native-vector-icons/Feather'; 
 import tw from 'twrnc'; 
 import { useEffect , useRef, useState } from 'react'; 
 import moment from "moment";
-import { ScrollView } from "react-native-gesture-handler";
+import { ScrollView, TextInput } from "react-native-gesture-handler";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const Specific = ({route}: any) => {
     const { id } = route.params;
     const ref = useRef<any | null>(null);
+    const [txt , setTxt] = useState<string>('');
+    const [user , setUser] = useState<any>();  
+    const [token , setToken] = useState<any>(); 
 
     const scrollToTop = () => {
         ref.current?.scrollTo({
@@ -19,10 +24,31 @@ export const Specific = ({route}: any) => {
     const [data , setData] = useState<any>(); 
 
     useEffect(() => {
+
+        AsyncStorage.getItem('token').then(val => setToken(val)); 
+    
+        AXIOS.post('userDet', {
+            token: token, 
+        }).then((res) => {
+            setUser(res.data);   
+        }); 
+
         AXIOS.get(`spec/${id}`).then((res) => {
             setData(res.data);  
-        })
-    }, []);
+        }) 
+    }, [user , data, token]); 
+
+    const postComment = async () => {
+        if ( txt.trim() && txt !== '') {
+            await AXIOS.post(`addCmt/${id}` , {
+                author: user._id, 
+                txt: txt, 
+            })
+        }
+        else {
+            Alert.alert(`No more empty content.`); 
+        }
+    }; 
 
     
     return (
@@ -39,10 +65,34 @@ export const Specific = ({route}: any) => {
                     <Text style={tw`text-[#072D4B] font-bold text-sm mb-5`}>by User</Text>
                     <Text style={tw`underline text-sm text-[#2F9FF8]`} onPress={() => scrollToTop()}>Back to Top</Text>
                 </View>
+                <View style={tw`flex flex-col w-full justify-start mt-10`}>
+                <View style={tw`flex flex-row w-full justify-center items-center mb-5`}> 
+                    <Text style={tw`text-[#072D4B] text-sm`}>Add your comment</Text>
+                    <View style={{flex: 1 , height: 1, backgroundColor: 'black' , marginLeft: 20}}></View>  
+                </View>
+                <TextInput placeholder="Enter your comment here..." placeholderTextColor={"gray"} autoCapitalize="none" value={txt} onChangeText={text => setTxt(text)}/> 
+                <TouchableOpacity onPress={() => postComment()}> 
+                <View style={tw`bg-[#2F9FF8] rounded-md w-[169px] h-[38px] justify-center items-center mt-10`}><Text style={tw`text-white`}>Post comment</Text></View>
+                </TouchableOpacity>
+                <View style={tw`flex flex-row w-full mt-5 justify-start items-center`}> 
+                   <Text style={tw`underline text-[#2F9FF8]`}>View All Comments</Text>
+                   <Text style={tw`text-[#2F9FF8] font-bold`}>(04)</Text>
+                   <Ionicons name="arrow-down-circle" size={24} color={"#2F9FF8"} style={tw`ml-2`}/>
+                </View>
+                {/* <View style={tw`flex flex-col w-full justify-start mt-5`}> 
+                <View style={tw`flex flex-row justify-start mt-5 mb-2`}><Text style={tw`text-[#2F9FF8] text-sm`}>UserName</Text><Ionicons name="thumbs-up" size={16} color={"black"} style={tw`ml-20`}/><Ionicons name="thumbs-down" size={16} color={"black"} style={tw`ml-5`}/></View>
+                <Text style={tw`text-[#072D4B] opacity-60`}>Content</Text>
+                <View style={tw`flex flex-row w-full justify-start items-center`}><Text style={tw`text-[#072D4B] opacity-30`}>Posted on {moment().format('lll')}</Text><View style={tw`flex flex-row items-center ml-5 mb-1`}><Ionicons name="trash" size={20} color={"#FF8C8C"}/><Text style={tw`underline text-[#FF8C8C] text-sm`}>Delete Comment</Text></View></View>
+                <Text style={tw`text-[#2F9FF8] text-sm`}>Reply</Text>
+                </View> */}
+                </View>
             </View>: <View><Text>Loading...</Text></View>}
         </View>
         </ScrollView>
     )
 }; 
+
+     
+  
 
 export default Specific; 
