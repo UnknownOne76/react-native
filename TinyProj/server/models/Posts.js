@@ -27,19 +27,8 @@ const ls = new Schema({
          required: true,
      }, 
      comments: [{
-      author: {
-        type: Schema.ObjectId,
-        ref: "Users", 
-        required: true
-      }, 
-      comment: {
-      type: String,
-      required: true
-      }, 
-      replies: [{
-         type: Schema.ObjectId, 
-         ref: "Comments",
-      }]
+      type: Schema.ObjectId, 
+      ref: "Comments", 
      }], 
      type: {
          type: String, 

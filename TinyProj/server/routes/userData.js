@@ -10,7 +10,7 @@ userRt.get("/", async (req, res) => {
   });
 
   userRt.post("/users", async (req, res) => {
-    const { name, email , password , img, job } = req.body;
+    const { name, email , password , img } = req.body;
     const oldUser = await User.findOne({email: email});
     if ( oldUser ) {
        res.send('User was here before.'); 
@@ -21,7 +21,6 @@ userRt.get("/", async (req, res) => {
         email: email,
         password: password, 
         img: img,
-        job: job,
       });
       res.send({
         message: "User has been created.",

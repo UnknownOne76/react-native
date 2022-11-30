@@ -11,8 +11,11 @@ export const Specific = ({route}: any) => {
     const { id } = route.params;
     const ref = useRef<any | null>(null);
     const [txt , setTxt] = useState<string>('');
-    const [user , setUser] = useState<any>();  
-    const [token , setToken] = useState<any>(); 
+    const [reply , setReply] = useState<string>(''); 
+    const [act , setAct] = useState<boolean>(false);
+    const [token , setToken] = useState<any>(null); 
+    const [data , setData] = useState<any>(null); 
+    let userId: any = null;  
 
     const scrollToTop = () => {
         ref.current?.scrollTo({
@@ -21,40 +24,52 @@ export const Specific = ({route}: any) => {
         });
       };
 
-    const [data , setData] = useState<any>(); 
 
     useEffect(() => {
-
-        AsyncStorage.getItem('token').then(val => setToken(val)); 
-    
-        AXIOS.post('userDet', {
-            token: token, 
-        }).then((res) => {
-            setUser(res.data);   
-        }); 
 
         AXIOS.get(`spec/${id}`).then((res) => {
             setData(res.data);  
         }) 
-    }, [user , data, token]); 
+    }, [data]);     
 
     const postComment = async () => {
-        if ( txt.trim() && txt !== '') {
+
+        await AsyncStorage.getItem('token').then(val => setToken(val)); 
+    
+        await AXIOS.post('userDet', {
+            token: token, 
+        }).then((res) => {
+            userId = res.data._id
+        });  
+
+        if ( txt !== '' && userId !== null) {
             await AXIOS.post(`addCmt/${id}` , {
-                author: user._id, 
-                txt: txt, 
+                author: userId, 
+                comment: txt, 
+            }).then(() => { 
+                console.log('Sent.'); 
+                setTxt('');
             })
         }
         else {
             Alert.alert(`No more empty content.`); 
         }
     }; 
-
+    
+    const sendReply = async () => {
+        await AsyncStorage.getItem('token').then(val => setToken(val)); 
+    
+        await AXIOS.post('userDet', {
+            token: token, 
+        }).then((res) => {
+            userId = res.data._id
+        });  
+    }
     
     return (
         <ScrollView ref={ref}> 
         <View style={tw`bg-white w-full`}> 
-            {data !== undefined ? <View style={tw`flex flex-col w-full p-5 justify-start items-start`}>
+            {data !== null ? <View style={tw`flex flex-col w-full p-5 justify-start items-start`}>
                 <Text style={tw`text-xl text-[#072D4B] mt-2 mb-4`}>{data.title}</Text>
                 <View style={tw`bg-[#2F9FF8] opacity-20 rounded-md`}><Text style={tw`text-blue-500 text-sm p-1 font-bold`}>{data.type}</Text></View>
                 <Text style={tw`text-[#072D4B] opacity-60 mt-5 mb-5 text-sm`}>{data.descrip}</Text>
@@ -62,7 +77,7 @@ export const Specific = ({route}: any) => {
                 <Text style={tw`text-[#072D4B] opacity-60 mt-5`}>{data.txt}</Text>
                 <View style={tw`flex flex-col w-full justify-center items-center mt-5`}> 
                     <Text style={tw`text-[#072D4B] opacity-30 text-sm`}>Published {moment(data.createdAt).format('lll')}</Text>
-                    <Text style={tw`text-[#072D4B] font-bold text-sm mb-5`}>by User</Text>
+                    <Text style={tw`text-[#072D4B] font-bold text-sm mb-5`}>by {data.author.name}</Text>
                     <Text style={tw`underline text-sm text-[#2F9FF8]`} onPress={() => scrollToTop()}>Back to Top</Text>
                 </View>
                 <View style={tw`flex flex-col w-full justify-start mt-10`}>
@@ -79,14 +94,21 @@ export const Specific = ({route}: any) => {
                    <Text style={tw`text-[#2F9FF8] font-bold`}>(04)</Text>
                    <Ionicons name="arrow-down-circle" size={24} color={"#2F9FF8"} style={tw`ml-2`}/>
                 </View>
-                {/* <View style={tw`flex flex-col w-full justify-start mt-5`}> 
-                <View style={tw`flex flex-row justify-start mt-5 mb-2`}><Text style={tw`text-[#2F9FF8] text-sm`}>UserName</Text><Ionicons name="thumbs-up" size={16} color={"black"} style={tw`ml-20`}/><Ionicons name="thumbs-down" size={16} color={"black"} style={tw`ml-5`}/></View>
-                <Text style={tw`text-[#072D4B] opacity-60`}>Content</Text>
-                <View style={tw`flex flex-row w-full justify-start items-center`}><Text style={tw`text-[#072D4B] opacity-30`}>Posted on {moment().format('lll')}</Text><View style={tw`flex flex-row items-center ml-5 mb-1`}><Ionicons name="trash" size={20} color={"#FF8C8C"}/><Text style={tw`underline text-[#FF8C8C] text-sm`}>Delete Comment</Text></View></View>
-                <Text style={tw`text-[#2F9FF8] text-sm`}>Reply</Text>
-                </View> */}
+                <View style={tw`flex flex-col w-full justify-start mt-5`}> 
+                {data.comments && data.comments.length !== 0 ? data.comments.map((x: any , i: number) => {  
+                    return<View key={i}><View style={tw`flex flex-row justify-start mt-5 mb-2`}><Text style={tw`text-[#2F9FF8] text-sm`}>User</Text><Ionicons name="thumbs-up" size={16} color={"black"} style={tw`ml-20`}/><Ionicons name="thumbs-down" size={16} color={"black"} style={tw`ml-5`}/></View>
+                    <Text style={tw`text-[#072D4B] opacity-60`}>{x.comment}</Text>
+                    <View style={tw`flex flex-row w-full justify-start items-center`}><Text style={tw`text-[#072D4B] opacity-30`}>Posted on {moment(x.created).format('lll')}</Text><View style={tw`flex flex-row items-center ml-5 mb-1`}><Ionicons name="trash" size={20} color={"#FF8C8C"}/><Text style={tw`underline text-[#FF8C8C] text-sm`}>Delete Comment</Text></View></View>
+                    <View style={tw`flex flex-row w-full justify-start items-center`}>
+                    <Text style={tw`text-[#2F9FF8] text-sm`} onPress={() => setAct(true)}>Reply</Text>
+                    <TextInput placeholder="Reply..." placeholderTextColor={"gray"} autoCapitalize="none" value={reply} onChangeText={text => setReply(text)} style={{display: act ? 'flex' : 'none', marginLeft: 10}}/>
+                    <TouchableOpacity onPress={() => sendReply()} style={{display: act ? 'flex' : 'none'}}><View style={tw`bg-[#2F9FF8] rounded-md justify-center items-center w-12 h-5 ml-5`}><Text style={tw`text-white`}>Send</Text></View></TouchableOpacity>
+                    </View>
+                    </View>
+                }):<View><Text>Loading...</Text></View>}
                 </View>
-            </View>: <View><Text>Loading...</Text></View>}
+                </View>
+            </View>:<View><Text>Loading...</Text></View>}
         </View>
         </ScrollView>
     )
