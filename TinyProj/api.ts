@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const AXIOS = axios.create({
-  baseURL: "http://localhost:3030/"
+  baseURL: "https://react-native-unknownone76.vercel.app/"
 });
 
 export default AXIOS;
