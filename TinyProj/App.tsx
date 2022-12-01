@@ -1,4 +1,4 @@
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, StackActions } from '@react-navigation/native';
 import { useEffect } from 'react';
 import * as React from 'react'; 
 import {View} from 'react-native';
@@ -10,12 +10,13 @@ import SplashScreen from 'react-native-splash-screen';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import User from './screens/Prof';
 import Specific from './screens/Spec';
+import AnimatedLottieView from 'lottie-react-native';
 
 const App = () => {
-
   useEffect(() => {
-     SplashScreen.hide(); 
-  }, []) 
+    SplashScreen.hide(); 
+  }, [StackActions])
+    
 
   const Stack = createNativeStackNavigator<any>(); 
 
@@ -45,7 +46,7 @@ const App = () => {
   }
 
   return (
-    <FsContextPrv> 
+    <FsContextPrv>
     <View style={{flex: 1 , width: windowWidth , height: windowHeight}}>
       <NavigationContainer> 
       <Navigator />

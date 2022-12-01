@@ -4,7 +4,7 @@ const newsPosts = require('../models/Posts'), postRt = exp.Router();
 
 postRt.get("/posts", async (req, res) => {
     if (req.body) { 
-      const posts = await newsPosts.find({}).sort({_id: -1}).populate("author").populate('comments');
+      const posts = await newsPosts.find({}).sort({_id: -1}).populate("author"); 
       res.send({
          data: posts,
       });
@@ -16,9 +16,23 @@ postRt.get("/posts", async (req, res) => {
   }) 
 
 postRt.get('/spec/:id' , async (req , res) => {
-   const data = await newsPosts.findOne({_id: req.params['id']}).populate("author").populate('comments');  
+   const length = await newsPosts.aggregate([
+      {
+         $group: {
+            _id: req.params['id'], 
+            count: { $sum: { $size: "$comments"}}
+         }
+      }
+   ]);
+
+   const data = await newsPosts.findOne({_id: req.params['id']}).populate("author").populate({path: 'comments' , populate: {
+    path: 'author',
+   }}).populate({path: 'comments' , populate: {
+   path: 'reply', 
+   }});  
+   
    if ( data ) {
-     res.send(data); 
+     res.send({data: data , len: length}); 
    } 
    else {
       res.send('Not found.'); 
@@ -45,7 +59,9 @@ postRt.get('/addCmt/:id/addReply/:repId' , async (req , res) => {
     let post;  
     await newsPosts.findById({_id: req.params['id']}).populate('author').lean().then((p) => {
         post = p; 
-        return cmts.findById({_id: req.params['repId']}).populate('author').populate('reply').lean(); 
+        return cmts.findById({_id: req.params['repId']}).populate('author').populate({path: 'reply' , populate: {
+           path: 'author'
+        }}).lean(); 
     }).then((comment) => {
        res.send({data: comment});
     }).catch((err) => console.log(err)); 

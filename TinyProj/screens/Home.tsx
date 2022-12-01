@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Ionicons from 'react-native-vector-icons/Feather'; 
 import { FlatList, Text, View , Image } from "react-native"
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -66,8 +66,8 @@ export const Home = ({navigation }: Props) => {
      <Text style={tw`text-[#072D4B] text-sm opacity-50 mb-5`}>{x.descrip}</Text>
      <Image source={{uri: x.postImg}} style={{width: 250 , height: 150}}/>
      </View>
-     <View style={tw`flex flex-row justify-start items-start w-auto pl-10 pb-5`}>
-        <Text style={tw`text-[#072D4B] opacity-40`}>Mint</Text>
+     <View style={tw`flex flex-row justify-start items-center pl-4 w-auto pb-5`}>
+        <Text style={tw`text-[#072D4B] opacity-40`}>{x.author.name}</Text>
         <Text style={tw`text-[#072D4B] opacity-40 pl-10`}>{moment(x.createdAt).fromNow()}</Text>
        <Ionicons name='share' size={16} color={"#0768B5"} style={tw`pl-20`}/>
        <Ionicons name='pocket' size={16} color={"#0768B5"} style={tw`pl-10`}/>
