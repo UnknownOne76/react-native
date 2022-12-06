@@ -1,13 +1,12 @@
-import React, { useEffect, useRef, useState } from "react"
-import { Animated, Button, Easing, Image, ImageBackground, SafeAreaView, StyleSheet, Text, View } from "react-native"
+import React, { useRef } from "react"
+import { Animated, Button, Easing, Image, ImageBackground, SafeAreaView, StyleSheet, Text, useWindowDimensions, View } from "react-native"
 import { FlatList } from "react-native-gesture-handler";
 import tw from 'twrnc'; 
 
 export const AroundWorld = () => {
      
     const fadeAnim = useRef(new Animated.Value(0)).current;
-    const spinValue = new Animated.Value(0)
-    const [rot , setRot] = useState<boolean>(false);
+    const spinValue = useRef(new Animated.Value(0)).current;
 
     const Movies = [
         {
@@ -53,46 +52,49 @@ export const AroundWorld = () => {
     }).start();
     };
 
-    useEffect(() => {
-      if ( rot ) {
         Animated.timing(
-          spinValue,
-          {
-            toValue: 1,
-            duration: 1500,
-            easing: Easing.linear,
-            useNativeDriver: true 
-          }).start()
-          console.log(spinValue); 
-      }
-    }, [rot]); 
+         spinValue,
+         {
+         toValue: 1,
+         duration: 3000,
+         easing: Easing.linear,
+         useNativeDriver: true 
+       }).start()
 
-    const spin = spinValue.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['0deg', '360deg']
-    })
 
-    const MovieItems = ({name , url}: any) => {
-        return (
+    const MovieItems = ({name , url, index , scrollX}: any) => {
+      const dimensions = useWindowDimensions();
+      const {width} = dimensions;
+      const position = Animated.subtract(index * width, scrollX);
+      const scale = position.interpolate({
+        inputRange: [width * -1, 0, width],
+        outputRange: [0, 1, 0],
+      });
+      const rotate = position.interpolate({
+        inputRange: [width * -1, 0, width],
+        outputRange: ['90deg', '0deg', '360deg'],
+      }); 
+
+      return (
             <View style={tw`flex flex-col justify-center items-center w-100`}>
                 <ImageBackground source={{uri: url}} style={tw`flex justify-center items-center w-72 h-72`} blurRadius={40}>
-                   <Animated.Image source={{uri: url}} style={{flex: 1 , justifyContent: 'center' , width: 144 , borderRadius: 5 , transform: [{rotate: rot ? spin : '0deg'}]}}/>
+                   <Animated.Image source={{uri: url}} style={{flex: 1 , justifyContent: 'center' , width: 144 , borderRadius: 5 , transform: [{scale: scale} , {rotate: rotate}]}}/>
                    <Text style={tw`text-green-500 text-sm`}>Data Name:{name}</Text>
                 </ImageBackground>
             </View>
         )
         }
 
-    const renderItems = ({item}: any) => {
+    const renderItems = ({item , index}: any) => {
        return ( 
-          <MovieItems name={item.name} url={item.url} />
+          <MovieItems name={item.name} url={item.url} index={index} scrollX={spinValue}/>
        )
-    };
+    }; 
 
     return (
         <View style={tw`flex flex-col w-full justify-center items-center bg-white`}>
         <View style={tw`flex justify-center items-center mt-30 mb-10 w-full`}>
-        <FlatList data={Movies} renderItem={renderItems} keyExtractor={key => key.id} scrollEnabled pagingEnabled showsHorizontalScrollIndicator={false} horizontal onActivated={() => setRot(false)} onScroll={() => setRot(true)} onCancelled={() => setRot(false)}/>
+        <FlatList data={Movies} renderItem={renderItems} keyExtractor={key => key.id} scrollEnabled pagingEnabled showsHorizontalScrollIndicator={false} horizontal onScroll={e => spinValue.setValue(e.nativeEvent.contentOffset.x)}/>
         </View>
         <Animated.View
         style={[styles.fadingContainer,{opacity: fadeAnim}
