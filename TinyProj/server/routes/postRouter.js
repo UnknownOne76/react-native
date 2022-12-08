@@ -42,9 +42,6 @@ postRt.get('/spec/:id' , async (req , res) => {
 
 postRt.post('/addCmt/:id' , async (req , res) => {
     const comment = new cmts(req.body);  
-    // await newsPosts.updateOne({_id: req.params['id']} , {$push: {comments: {
-    //     _id: comment._id
-    // }}}).populate('comments').then(res => console.log(res) , res.send('Successfully Sent.')).catch(err => console.log(err));
     comment.save().then(() => newsPosts.findById(req.params['id'])).then((post) => {
       post.comments.unshift(comment);
       return post.save();
@@ -68,13 +65,6 @@ postRt.get('/addCmt/:id/addReply/:repId' , async (req , res) => {
 }); 
 
 postRt.post('/addCmt/:id/addReply/:repId/replies', async (req, res) => { 
-    // await newsPosts.findById({_id: req.params['id']}).populate('author').populate('comments').then(async(post) => {
-    //   console.log(post); 
-    //    await cmts.findByIdAndUpdate({_id: req.params['repId']} , {$push: {reply: {
-    //       author: author, 
-    //       comment: txt, 
-    //    }}}).then((res) => console.log(res) , res.send('Replied!')).catch(err => console.log(err)); 
-    // })
   const reply = new cmts(req.body);
   await newsPosts.findById(req.params['id'])
     .then((post) => {
@@ -114,5 +104,9 @@ postRt.post("/post", async (req, res) => {
      });
    }
  });
+
+  postRt.delete('/spec/:id/delCmt/:delId' , (req , res) => {
+      //tbc...
+  })
 
 module.exports = postRt; 
