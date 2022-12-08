@@ -13,9 +13,11 @@ export const Specific = ({route}: any) => {
     const [len , setLen] = useState<any>(null); 
     const [txt , setTxt] = useState<string>('');
     const [reply , setReply] = useState<string>('');
+    const [nst , setNst] = useState<string>(''); 
     const [token , setToken] = useState<any>(null); 
     const [data , setData] = useState<any>(null); 
     const [tog , setTog] = useState<any>(null); 
+    const [rep , setRep] = useState<any>(null); 
     let userId: any = null;   
 
     const scrollToTop = () => {
@@ -58,7 +60,7 @@ export const Specific = ({route}: any) => {
         }
     };
 
-    const deleteThis = async({user}: any) => {
+    const deleteThis = async({user , cmtId}: any) => {
         await AsyncStorage.getItem('token').then(val => setToken(val)); 
     
         await AXIOS.post('userDet', {
@@ -67,13 +69,8 @@ export const Specific = ({route}: any) => {
             userId = res.data._id
         });
 
-        if ( userId == user ) {
-            console.log('YOU CAN DELETE XD'); 
-        }
-        else {
-           Alert.alert(`Sorry you can't delete this.`); 
-        }
-    }
+        return userId == user ? await AXIOS.delete(`spec/${id}/delCmt/${cmtId}`).then(() => console.log('Deleted!')).catch(err => console.log(err)) : Alert.alert(`Sorry you can't delete this.`);
+    }; 
     
     const sendReply = async ({repId}: any) => {
         await AsyncStorage.getItem('token').then(val => setToken(val)); 
@@ -124,25 +121,26 @@ export const Specific = ({route}: any) => {
                    <Ionicons name="arrow-down-circle" size={24} color={"#2F9FF8"} style={tw`ml-2`}/>
                 </View>
                 <View style={tw`flex flex-col w-full justify-start mt-5`}> 
-                {data.comments && data.comments.length !== 0 ? data.comments.map((x: any , i: number) => {   
+                {data.comments && data.comments.length !== 0 ? data.comments.map((x: any , i: number) => {    
                     return<View key={i}><View style={tw`flex flex-row justify-start mt-5 mb-2`}><Text style={tw`text-[#2F9FF8] text-sm`}>{x.author.name}</Text><Ionicons name="thumbs-up" size={16} color={"black"} style={tw`ml-20`}/><Ionicons name="thumbs-down" size={16} color={"black"} style={tw`ml-5`}/></View>
                     <Text style={tw`text-[#072D4B] opacity-60`}>{x.comment}</Text>
-                    <View style={tw`flex flex-row w-full justify-start items-center`}><Text style={tw`text-[#072D4B] opacity-30`}>Posted on {moment(x.created).format('lll')}</Text><TouchableOpacity onPress={() => deleteThis({user: x.author._id})}><View style={tw`flex flex-row items-center ml-5 mb-1`}><Ionicons name="trash" size={20} color={"#FF8C8C"}/><Text style={tw`underline text-[#FF8C8C] text-sm`}>Delete Comment</Text></View></TouchableOpacity></View>
+                    <View style={tw`flex flex-row w-full justify-start items-center`}><Text style={tw`text-[#072D4B] opacity-30`}>Posted on {moment(x.created).format('lll')}</Text><TouchableOpacity onPress={() => deleteThis({user: x.author._id , cmtId: x._id})}><View style={tw`flex flex-row items-center ml-5 mb-1`}><Ionicons name="trash" size={20} color={"#FF8C8C"}/><Text style={tw`underline text-[#FF8C8C] text-sm`}>Delete Comment</Text></View></TouchableOpacity></View>
                     <View style={tw`flex flex-row w-full justify-start items-center`}>
                     <Text style={tw`text-[#2F9FF8] text-sm`} onPress={() => setTog(i)}>Reply</Text>
                     <TextInput placeholder="Reply..." placeholderTextColor={"gray"} autoCapitalize="none" value={reply} onChangeText={text => setReply(text)} style={{display: tog == i ? 'flex' : 'none', marginLeft: 10}}/>
                     <TouchableOpacity onPress={() => sendReply({repId: x._id})} style={{display: tog == i ? 'flex' : 'none'}}><View style={tw`bg-[#2F9FF8] rounded-md justify-center items-center w-12 h-5 ml-5`}><Text style={tw`text-white`}>Send</Text></View></TouchableOpacity>
-                    {x.reply !== null ? x.reply.map((x: any , i: number) => { 
-                        // return <View key={i} style={tw`flex flex-col w-full justify-start items-start`}> 
-                        // <View style={tw`flex flex-row justify-start`}><Text style={tw`text-[#2F9FF8] text-sm`}>{x.author.name}</Text><Ionicons name="thumbs-up" size={16} color={"black"} style={tw`ml-20`}/><Ionicons name="thumbs-down" size={16} color={"black"} style={tw`ml-5`}/></View>
-                        // <Text style={tw`text-[#072D4B] opacity-60`}>{x.comment}</Text>
-                        // <View style={tw`flex flex-row w-full justify-start items-center`}><Text style={tw`text-[#072D4B] opacity-30`}>Posted on {moment(x.created).format('lll')}</Text><View style={tw`flex flex-row items-center ml-5 mb-1`}><Ionicons name="trash" size={20} color={"#FF8C8C"}/><Text style={tw`underline text-[#FF8C8C] text-sm`}>Delete Comment</Text></View></View>
-                        // <View style={tw`flex flex-row w-full justify-start items-center`}>
-                        // <Text style={tw`text-[#2F9FF8] text-sm`} onPress={() => setAct(true)}>Reply</Text>
-                        // <TextInput placeholder="Reply..." placeholderTextColor={"gray"} autoCapitalize="none" value={reply} onChangeText={text => setReply(text)} style={{display: act ? 'flex' : 'none', marginLeft: 10}}/>
-                        // </View>
-                        // </View>
-                    }): <View><Text>Loading...</Text></View>}
+                    </View>
+                    <View style={tw`flex flex-col w-full`}>
+                            {x.reply != null ? x.reply.map((x: any , i: number) => {
+                            return<View key={i} style={tw`flex flex-col w-full justify-start ml-2`}>
+                                <View style={tw`flex flex-row justify-start mt-5 mb-2`}><Text style={tw`text-[#2F9FF8] text-sm`}>Bruh</Text><Ionicons name="thumbs-up" size={16} color={"black"} style={tw`ml-20`}/><Ionicons name="thumbs-down" size={16} color={"black"} style={tw`ml-5`}/></View>
+                                <Text style={tw`text-[#072D4B] opacity-60`}>{x.comment}</Text>
+                                <View style={tw`flex flex-row w-2/1 justify-start mt-5`}><Text style={tw`text-[#072D4B] opacity-30`}>Posted on {moment(x.created).format('lll')}</Text><TouchableOpacity onPress={() => deleteThis({user: x.author._id , cmtId: x._id})}><View style={tw`flex flex-row items-center ml-5`}><Ionicons name="trash" size={20} color={"#FF8C8C"}/><Text style={tw`underline text-[#FF8C8C] text-sm`}>Delete Comment</Text></View></TouchableOpacity></View>
+                                <Text style={tw`text-[#2F9FF8] text-sm`} onPress={() => setRep(i)}>Reply</Text>
+                                <TextInput placeholder="Reply..." placeholderTextColor={"gray"} autoCapitalize="none" value={reply} onChangeText={text => setReply(text)} style={{display: rep == i ? 'flex' : 'none', marginLeft: 10}}/>
+                                <TouchableOpacity onPress={() => sendReply({repId: x._id})} style={{display: rep == i ? 'flex' : 'none'}}><View style={tw`bg-[#2F9FF8] rounded-md justify-center items-center w-12 h-5 ml-5`}><Text style={tw`text-white`}>Send</Text></View></TouchableOpacity>
+                                </View>
+                            }) : <View><Text>Loading...</Text></View>}
                     </View>
                     </View>
                 }):<View><Text>Loading...</Text></View>}

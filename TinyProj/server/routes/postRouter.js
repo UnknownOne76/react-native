@@ -1,6 +1,7 @@
 const exp = require('express'); 
 const cmts = require('../models/Comments');
-const newsPosts = require('../models/Posts'), postRt = exp.Router(); 
+const newsPosts = require('../models/Posts'), postRt = exp.Router();
+const mongoose = require('mongoose'); 
 
 postRt.get("/posts", async (req, res) => {
     if (req.body) { 
@@ -105,8 +106,10 @@ postRt.post("/post", async (req, res) => {
    }
  });
 
-  postRt.delete('/spec/:id/delCmt/:delId' , (req , res) => {
-      //tbc...
-  })
+  postRt.delete('/spec/:id/delCmt/:delId' , async(req , res) => {
+       await cmts.findByIdAndDelete({_id: req.params['delId']}).then(async() => {
+           await newsPosts.findByIdAndUpdate({_id: req.params['id']} , {$pullAll: {comments: [{_id: req.params['delId']}]}}).then((rs) => console.log(rs) , res.send('Deleted!')).catch((err) => console.log(err)); 
+       })
+  }); 
 
 module.exports = postRt; 
