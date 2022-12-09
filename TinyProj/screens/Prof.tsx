@@ -6,18 +6,27 @@ import { useEffect, useState } from "react";
 
 export const User = ({navigation}: any) => {
 
-    const [user , setUser] = useState<any>(); 
-    const [token , setToken] = useState<any>('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IkRhcmxrYXJtMTRAZ21haWwuY29tIiwiaWF0IjoxNjY5NTUzNzkyfQ.GQlJikvSksiHbTIENjqxtKVLW2Esrbqu4oTDQb6EgP0');
+    const [user , setUser] = useState<any>(null); 
+    const [token , setToken] = useState<any>(null); 
 
-    useEffect(() => {
-        AsyncStorage.getItem('token').then(val => setToken(val));  
-    
-        AXIOS.post('userDet', {
-            token: token, 
-        }).then((res) => {
-            setUser(res.data); 
-        }); 
-    }, [user]); 
+    AsyncStorage.getItem('token' , (err , val) => {
+        if (!err) {
+            return setToken(val); 
+        } 
+        else {
+           console.log(err); 
+        }
+    })
+
+    useEffect(() => { 
+        if ( token != null ) {       
+            AXIOS.post('userDet', {
+                token: token 
+            }).then((res) => {
+                setUser(res.data); 
+            });  
+        }
+    }, [user , token]); 
 
 
     const logOut = async () => {

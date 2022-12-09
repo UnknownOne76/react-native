@@ -7,10 +7,11 @@ import moment from "moment";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export const Specific = ({route}: any) => {
+export const Specific = ({navigation , route}: any) => {
     const { id } = route.params;
     const ref = useRef<any | null>(null);
     const [len , setLen] = useState<any>(null); 
+    const [disp , setDisp] = useState<boolean>(false); 
     const [txt , setTxt] = useState<string>('');
     const [reply , setReply] = useState<string>('');
     const [nst , setNst] = useState<string>(''); 
@@ -27,19 +28,24 @@ export const Specific = ({route}: any) => {
         });
       };
 
-
     useEffect(() => {
 
         AXIOS.get(`spec/${id}`).then((res) => { 
             setData(res.data.data);  
             setLen(res.data.len[0].count); 
-        }) 
-    }, [data]);     
+        })
+
+        AsyncStorage.getItem('token' , (err , val) => {
+            if (!err) {
+             return setToken(val); 
+            } 
+            else {
+             console.log(err); 
+            }; 
+        });
+    }, [data , token]);     
 
     const postComment = async () => {
-
-        await AsyncStorage.getItem('token').then(val => setToken(val)); 
-    
         await AXIOS.post('userDet', {
             token: token, 
         }).then((res) => {
@@ -61,7 +67,6 @@ export const Specific = ({route}: any) => {
     };
 
     const deleteThis = async({user , cmtId}: any) => {
-        await AsyncStorage.getItem('token').then(val => setToken(val)); 
     
         await AXIOS.post('userDet', {
             token: token, 
@@ -73,7 +78,6 @@ export const Specific = ({route}: any) => {
     }; 
     
     const sendReply = async ({repId}: any) => {
-        await AsyncStorage.getItem('token').then(val => setToken(val)); 
     
         await AXIOS.post('userDet', {
             token: token, 
@@ -105,6 +109,7 @@ export const Specific = ({route}: any) => {
                     <Text style={tw`text-[#072D4B] opacity-30 text-sm`}>Published {moment(data.createdAt).format('lll')}</Text>
                     <Text style={tw`text-[#072D4B] font-bold text-sm mb-5`}>by {data.author.name}</Text>
                     <Text style={tw`underline text-sm text-[#2F9FF8]`} onPress={() => scrollToTop()}>Back to Top</Text>
+                    <Text style={tw`text-sm text-[#2F9FF8] mt-5`} onPress={() => navigation.navigate('HomeScreen')}> Back to Home </Text>
                 </View>
                 <View style={tw`flex flex-col w-full justify-start mt-10`}>
                 <View style={tw`flex flex-row w-full justify-center items-center mb-5`}> 
@@ -115,13 +120,15 @@ export const Specific = ({route}: any) => {
                 <TouchableOpacity onPress={() => postComment()}> 
                 <View style={tw`bg-[#2F9FF8] rounded-md w-[169px] h-[38px] justify-center items-center mt-10`}><Text style={tw`text-white`}>Post comment</Text></View>
                 </TouchableOpacity>
+                <TouchableOpacity onPress={() => disp ? setDisp(false) : setDisp(true)}>
                 <View style={tw`flex flex-row w-full mt-5 justify-start items-center`}> 
                    <Text style={tw`underline text-[#2F9FF8]`}>View All Comments</Text>
                    <Text style={tw`text-[#2F9FF8] font-bold`}>({len && len !== null ? len : 0})</Text>
-                   <Ionicons name="arrow-down-circle" size={24} color={"#2F9FF8"} style={tw`ml-2`}/>
+                   <Ionicons name={disp ? 'arrow-up-circle' : 'arrow-down-circle'} size={24} color={"#2F9FF8"} style={tw`ml-2`}/>
                 </View>
-                <View style={tw`flex flex-col w-full justify-start mt-5`}> 
-                {data.comments && data.comments.length !== 0 ? data.comments.map((x: any , i: number) => {    
+                </TouchableOpacity>
+                <View style={tw`flex flex-col w-full justify-start mt-5 ${disp ? 'flex' : 'hidden'}`}> 
+                {data.comments && data.comments.length !== 0 ? data.comments.map((x: any , i: number) => {   
                     return<View key={i}><View style={tw`flex flex-row justify-start mt-5 mb-2`}><Text style={tw`text-[#2F9FF8] text-sm`}>{x.author.name}</Text><Ionicons name="thumbs-up" size={16} color={"black"} style={tw`ml-20`}/><Ionicons name="thumbs-down" size={16} color={"black"} style={tw`ml-5`}/></View>
                     <Text style={tw`text-[#072D4B] opacity-60`}>{x.comment}</Text>
                     <View style={tw`flex flex-row w-full justify-start items-center`}><Text style={tw`text-[#072D4B] opacity-30`}>Posted on {moment(x.created).format('lll')}</Text><TouchableOpacity onPress={() => deleteThis({user: x.author._id , cmtId: x._id})}><View style={tw`flex flex-row items-center ml-5 mb-1`}><Ionicons name="trash" size={20} color={"#FF8C8C"}/><Text style={tw`underline text-[#FF8C8C] text-sm`}>Delete Comment</Text></View></TouchableOpacity></View>
@@ -137,7 +144,7 @@ export const Specific = ({route}: any) => {
                                 <Text style={tw`text-[#072D4B] opacity-60`}>{x.comment}</Text>
                                 <View style={tw`flex flex-row w-2/1 justify-start mt-5`}><Text style={tw`text-[#072D4B] opacity-30`}>Posted on {moment(x.created).format('lll')}</Text><TouchableOpacity onPress={() => deleteThis({user: x.author._id , cmtId: x._id})}><View style={tw`flex flex-row items-center ml-5`}><Ionicons name="trash" size={20} color={"#FF8C8C"}/><Text style={tw`underline text-[#FF8C8C] text-sm`}>Delete Comment</Text></View></TouchableOpacity></View>
                                 <Text style={tw`text-[#2F9FF8] text-sm`} onPress={() => setRep(i)}>Reply</Text>
-                                <TextInput placeholder="Reply..." placeholderTextColor={"gray"} autoCapitalize="none" value={reply} onChangeText={text => setReply(text)} style={{display: rep == i ? 'flex' : 'none', marginLeft: 10}}/>
+                                <TextInput placeholder="Reply..." placeholderTextColor={"gray"} autoCapitalize="none" value={nst} onChangeText={text => setNst(text)} style={{display: rep == i ? 'flex' : 'none', marginLeft: 10}}/>
                                 <TouchableOpacity onPress={() => sendReply({repId: x._id})} style={{display: rep == i ? 'flex' : 'none'}}><View style={tw`bg-[#2F9FF8] rounded-md justify-center items-center w-12 h-5 ml-5`}><Text style={tw`text-white`}>Send</Text></View></TouchableOpacity>
                                 </View>
                             }) : <View><Text>Loading...</Text></View>}
