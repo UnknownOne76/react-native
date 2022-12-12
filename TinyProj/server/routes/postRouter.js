@@ -1,7 +1,6 @@
 const exp = require('express'); 
 const cmts = require('../models/Comments');
 const newsPosts = require('../models/Posts'), postRt = exp.Router();
-const mongoose = require('mongoose'); 
 
 postRt.get("/posts", async (req, res) => {
     if (req.body) { 
@@ -30,7 +29,7 @@ postRt.get('/spec/:id' , async (req , res) => {
     path: 'author',
    }}).populate({path: 'comments' , populate: {
    path: 'reply', 
-   }});  
+   }});   
    
    if ( data ) {
      res.send({data: data , len: length}); 
@@ -111,5 +110,13 @@ postRt.post("/post", async (req, res) => {
            await newsPosts.findByIdAndUpdate({_id: req.params['id']} , {$pullAll: {comments: [{_id: req.params['delId']}]}}).then((rs) => console.log(rs) , res.send('Deleted!')).catch((err) => console.log(err)); 
        })
   }); 
+
+  postRt.put('/spec/:id/addLike/:cmtId' , async(req , res) => {
+     const commentUser = await newsPosts.findById({_id: req.params['id']} , {comments: {_id: req.params['cmtId']}}).populate({path: 'comments' , populate: {
+      path: 'author'}}); 
+       const { userId } = await req.body;
+       //tbc...    
+       res.send('sent!'); 
+  })
 
 module.exports = postRt; 

@@ -1,4 +1,5 @@
 const mongo = require('mongoose'); 
+const Populate = require('../autopop');
 
 const { Schema , model } = mongo;
 
@@ -17,8 +18,18 @@ const commentSchema = new Schema({
             default: Date.now,
             required: true
         },    
-        reply: [{ type: Schema.ObjectId, ref: 'Comments' }]
+        reply: [{ type: Schema.ObjectId, ref: 'Comments' }],
+        likes: [{type: Schema.ObjectId}],
+        likeCnt: {type: Number , default: 0 , required: true},
+        disLikes: [{type: Schema.ObjectId}], 
+        disCnt: {type: Number , default: 0 , requied: true} 
 }, {timestamps: true});
+
+commentSchema
+  .pre('findOne', Populate('author'))
+  .pre('find', Populate('author'))
+  .pre('findOne', Populate('reply'))
+  .pre('find', Populate('reply'));
 
 const cmts = model("Comments" , commentSchema);
  

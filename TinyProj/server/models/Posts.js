@@ -1,4 +1,4 @@
-const mong = require('mongoose'); 
+const mong = require('mongoose'), Populate = require('../autopop'); 
 const { Schema , model } = mong;
 
 const ls = new Schema({
@@ -35,6 +35,12 @@ const ls = new Schema({
          required: true
      }
 }, { timestamps: true });
+
+ls
+  .pre('findOne', Populate('author'))
+  .pre('find', Populate('author'))
+  .pre('findOne', Populate('comments'))
+  .pre('find', Populate('comments'));
 
 const newsPosts = model('Posts' , ls); 
 module.exports = newsPosts; 
