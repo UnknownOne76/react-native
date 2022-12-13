@@ -19,9 +19,9 @@ const commentSchema = new Schema({
             required: true
         },    
         reply: [{ type: Schema.ObjectId, ref: 'Comments' }],
-        likes: [{type: Schema.ObjectId}],
+        likes: [],
         likeCnt: {type: Number , default: 0 , required: true},
-        disLikes: [{type: Schema.ObjectId}], 
+        disLikes: [], 
         disCnt: {type: Number , default: 0 , requied: true} 
 }, {timestamps: true});
 

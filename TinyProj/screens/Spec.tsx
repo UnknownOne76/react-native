@@ -104,28 +104,40 @@ export const Specific = ({navigation , route}: any) => {
             userId = res.data._id
         });
 
-         await AXIOS.put(`spec/${id}/addLike/${cmtId}` , {
-              userId: userId
-         }).then(() => console.log('Liked!')).catch(err => console.log(err));
-         
-         //hold up sth ain't right.
+        
+        await AXIOS.put(`addLike/${cmtId}` , {
+            userId: userId
+        }).then((res) => Alert.alert(res.data)).catch(err => console.log(err));
+    }; 
+
+    const disLike = async({cmtId}: any) => {
+
+        await AXIOS.post('userDet', {
+            token: token, 
+        }).then((res) => {
+            userId = res.data._id
+        });
+
+        await AXIOS.put(`disLike/${cmtId}`, {
+            userId: userId, 
+        }).then((res) => Alert.alert(res.data)).catch(err => console.log(err)); 
     }
 
-    const Comment = ({ comment , key }: any) => {
-        const nestedComments = (comment.reply || []).map((comment: any) => {
-          return <Comment comment={comment} key={key}/>;
+    const Comment = ({ comment , eachKey }: any) => {
+        const nestedComments = (comment.reply || []).map((comment: any , ind: number) => {
+          return <Comment comment={comment} eachKey={ind}/>;
         });
       
         return (
-            <View key={key} style={tw`flex flex-col w-full justify-start ml-2`}>
-            <View style={tw`flex flex-row justify-start mt-5 mb-2`}><Text style={tw`text-[#2F9FF8] text-sm`}>{comment.author.name}</Text><Ionicons name="thumbs-up" size={16} color={"black"} style={tw`ml-20`}/><Ionicons name="thumbs-down" size={16} color={"black"} style={tw`ml-5`}/></View>
+            <View style={tw`flex flex-col w-full justify-start ml-2 border-l-2 border-[#FFE8C4]`} key={eachKey}>
+            <View style={tw`flex flex-row justify-start mt-5 mb-2`}><Text style={tw`text-[#2F9FF8] text-sm`}>{comment.author.name}</Text><Ionicons name="thumbs-up" size={16} color={"black"} style={tw`ml-20`} onPress={() => giveLike({cmtId: comment._id})}/><Text style={tw`ml-2`}>{comment.likeCnt}</Text><Ionicons name="thumbs-down" size={16} color={"black"} style={tw`ml-5`} onPress={() => disLike({cmtId: comment._id})}/><Text style={tw`ml-2`}>{comment.disCnt}</Text></View>
             <Text style={tw`text-[#072D4B] opacity-60`}>{comment.comment}</Text>
             <View style={tw`flex flex-row w-2/1 justify-start mt-5`}><Text style={tw`text-[#072D4B] opacity-30`}>Posted on {moment(comment.created).format('lll')}</Text><TouchableOpacity onPress={() => deleteThis({user: comment.author._id , cmtId: comment._id})}><View style={tw`flex flex-row items-center ml-5`}><Ionicons name="trash" size={20} color={"#FF8C8C"}/><Text style={tw`underline text-[#FF8C8C] text-sm`}>Delete Comment</Text></View></TouchableOpacity></View>
-            <Text style={tw`text-[#2F9FF8] text-sm`} onPress={() => setRep(key)}>Reply</Text>
-            <TextInput placeholder="Reply..." placeholderTextColor={"gray"} autoCapitalize="none" value={nst} onChangeText={text => setNst(text)} style={{display: rep == key ? 'flex' : 'none', marginLeft: 10}}/>
-            <TouchableOpacity onPress={() => sendReply({repId: comment._id})} style={{display: rep == key ? 'flex' : 'none'}}><View style={tw`bg-[#2F9FF8] rounded-md justify-center items-center w-12 h-5 ml-5`}><Text style={tw`text-white`}>Send</Text></View></TouchableOpacity>
+            <Text style={tw`text-[#2F9FF8] text-sm`} onPress={() => setRep(eachKey)}>Reply</Text>
+            <TextInput placeholder="Reply..." placeholderTextColor={"gray"} autoCapitalize="none" value={nst} onChangeText={text => setNst(text)} style={{display: rep == eachKey ? 'flex' : 'none', marginLeft: 10}}/>
+            <TouchableOpacity onPress={() => sendReply({repId: comment._id})} style={{display: rep == eachKey ? 'flex' : 'none'}}><View style={tw`bg-[#2F9FF8] rounded-md justify-center items-center w-12 h-5 ml-5`}><Text style={tw`text-white`}>Send</Text></View></TouchableOpacity>
             {nestedComments}
-            </View>
+            </View> 
         );
       }
     
@@ -162,7 +174,7 @@ export const Specific = ({navigation , route}: any) => {
                 </TouchableOpacity>
                 <View style={tw`flex flex-col w-full justify-start mt-5 ${disp ? 'flex' : 'hidden'}`}> 
                 {data.comments && data.comments.length !== 0 ? data.comments.map((x: any , i: number) => {   
-                    return<View key={i}><View style={tw`flex flex-row justify-start items-center mt-5 mb-2`}><Text style={tw`text-[#2F9FF8] text-sm`}>{x.author.name}</Text><Ionicons name="thumbs-up" size={16} color={"black"} style={tw`ml-20`} onPress={() => giveLike({cmtId: x._id})}/><Text style={tw`ml-2`}>0</Text><Ionicons name="thumbs-down" size={16} color={"black"} style={tw`ml-5`}/><Text style={tw`ml-2`}>0</Text></View>
+                    return<View key={i}><View style={tw`flex flex-row justify-start items-center mt-5 mb-2`}><Text style={tw`text-[#2F9FF8] text-sm`}>{x.author.name}</Text><Ionicons name="thumbs-up" size={16} color={"black"} style={tw`ml-20`} onPress={() => giveLike({cmtId: x._id})}/><Text style={tw`ml-2`}>{x.likeCnt}</Text><Ionicons name="thumbs-down" size={16} color={"black"} style={tw`ml-5`} onPress={() => disLike({cmtId: x._id})}/><Text style={tw`ml-2`}>{x.disCnt}</Text></View>
                     <Text style={tw`text-[#072D4B] opacity-60`}>{x.comment}</Text>
                     <View style={tw`flex flex-row w-full justify-start items-center`}><Text style={tw`text-[#072D4B] opacity-30`}>Posted on {moment(x.created).format('lll')}</Text><TouchableOpacity onPress={() => deleteThis({user: x.author._id , cmtId: x._id})}><View style={tw`flex flex-row items-center ml-5 mb-1`}><Ionicons name="trash" size={20} color={"#FF8C8C"}/><Text style={tw`underline text-[#FF8C8C] text-sm`}>Delete Comment</Text></View></TouchableOpacity></View>
                     <View style={tw`flex flex-row w-full justify-start items-center`}>
@@ -171,8 +183,8 @@ export const Specific = ({navigation , route}: any) => {
                     <TouchableOpacity onPress={() => sendReply({repId: x._id})} style={{display: tog == i ? 'flex' : 'none'}}><View style={tw`bg-[#2F9FF8] rounded-md justify-center items-center w-12 h-5 ml-5`}><Text style={tw`text-white`}>Send</Text></View></TouchableOpacity>
                     </View>
                     <View style={tw`flex flex-col w-full`}>
-                            {x.reply != null ? x.reply.map((x: any , i: number) => {
-                            return Comment({comment: x , key: i})
+                            {x.reply != null ? x.reply.map((x: any , ind: number) => {
+                            return Comment({comment: x , eachKey: ind}) 
                             }) : <View><Text>Loading...</Text></View>}
                     </View>
                     </View>

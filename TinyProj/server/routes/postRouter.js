@@ -111,12 +111,4 @@ postRt.post("/post", async (req, res) => {
        })
   }); 
 
-  postRt.put('/spec/:id/addLike/:cmtId' , async(req , res) => {
-     const commentUser = await newsPosts.findById({_id: req.params['id']} , {comments: {_id: req.params['cmtId']}}).populate({path: 'comments' , populate: {
-      path: 'author'}}); 
-       const { userId } = await req.body;
-       //tbc...    
-       res.send('sent!'); 
-  })
-
 module.exports = postRt; 
