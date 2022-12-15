@@ -10,8 +10,8 @@ import SplashScreen from 'react-native-splash-screen';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import User from './screens/Prof';
 import Specific from './screens/Spec';
-import AnimatedLottieView from 'lottie-react-native';
 import AroundWorld from './screens/World';
+import Business from './screens/Business';
 
 const App = () => {
   useEffect(() => {
@@ -34,6 +34,7 @@ const App = () => {
             <Stack.Screen name="User" component={User} options={{ headerShown: false }} />
             <Stack.Screen name="Spec" component={Specific} options={{header: (e: any) => <Header navigation={e.navigation}/>}}/>
             <Stack.Screen name="World" component={AroundWorld} options={{header: (e: any) => <Header navigation={e.navigation}/>}}/>
+            <Stack.Screen name="Business" component={Business}/>
           </Stack.Navigator>
        )
      }

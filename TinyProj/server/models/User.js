@@ -15,7 +15,17 @@ const user = new Schema({
     img: {
        type: String,
        required: true
-    },     
+    },
+    followers: {
+        type: Schema.ObjectId, 
+        ref: 'Users', 
+        required: true
+    }, 
+    following: {
+        type: Schema.ObjectId, 
+        ref: 'Users', 
+        required: true, 
+    }     
 }); 
 
 const User = model('Users' , user); 
