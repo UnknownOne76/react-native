@@ -146,7 +146,7 @@ export const Specific = ({navigation , route}: any) => {
         <View style={tw`bg-white w-full`}> 
             {data !== null ? <View style={tw`flex flex-col w-full p-5 justify-start items-start`}>
                 <Text style={tw`text-xl text-[#072D4B] mt-2 mb-4`}>{data.title}</Text>
-                <View style={tw`bg-[#2F9FF8] opacity-20 rounded-md`}><Text style={tw`text-blue-500 text-sm p-1 font-bold`}>{data.type}</Text></View>
+                <View style={tw`bg-[#2F9FF8] opacity-20 rounded-md`}><Text style={tw`text-blue-500 text-sm p-1 font-bold`}>{data.genre}</Text></View>
                 <Text style={tw`text-[#072D4B] opacity-60 mt-5 mb-5 text-sm`}>{data.descrip}</Text>
                 <Image source={{uri: data.postImg}} style={{width: 327, height: 183}}/>
                 <Text style={tw`text-[#072D4B] opacity-60 mt-5`}>{data.txt}</Text>
@@ -192,6 +192,12 @@ export const Specific = ({navigation , route}: any) => {
                 </View>
                 </View>
             </View>:<View><Text>Loading...</Text></View>}
+            <View style={tw`flex flex-col w-full justify-center items-center`}>
+            <View style={tw`flex flex-row w-full justify-start items-center ml-10 mt-10`}>
+                <Text style={tw`text-[#072D4B] text-sm font-bold`}>More News for you</Text>
+                <View style={{flex: 1 , height: 1, backgroundColor: 'black' , marginLeft: 20 , marginHorizontal: 40}}></View> 
+            </View>
+            </View>
         </View>
         </ScrollView>
     )

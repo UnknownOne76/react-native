@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { Pressable, View , Animated, SafeAreaView, StyleSheet } from "react-native"
+import { Pressable, View , Animated, SafeAreaView} from "react-native"
+import tw from 'twrnc'; 
 
 export const Business = () => {
   const [day, setDay] = useState<boolean>(true);
@@ -15,75 +16,23 @@ export const Business = () => {
   }, [day, anim]);
 
   return (
-    <View style={styles.cotnainer}>
-      <SafeAreaView>
-        <View style={styles.header}>
-          <Pressable
-            style={styles.chip}
-            onPress={() => setDay(val => !val)}>
+    <View style={tw`flex`}>
+    <SafeAreaView>
+      <View style={tw`flex flex-row justify-end p-5`}>
+        <Pressable
+          style={tw`flex w-16 h-8 rounded-full bg-[#27173A]`}
+          onPress={() => setDay(val => !val)}>
+          <Animated.View
+            style={[tw`absolute top-1 left-1 w-6 h-6 rounded-full bg-[#FFC207] overflow-hidden` ,{transform: [{translateX: anim}]}]}>
             <Animated.View
-              style={{...styles.ball, transform: [{translateX: anim}]}}>
-              <Animated.View
-                style={{
-                  ...styles.shadow,
-                  transform: [
-                    {
-                      translateX: anim.interpolate({
-                        inputRange: [0, 32],
-                        outputRange: [0, 15],
-                      }),
-                    },
-                    {
-                      scale: anim.interpolate({
-                        inputRange: [0, 32],
-                        outputRange: [0, 1],
-                      }),
-                    },
-                  ],
-                }}
-              />
-            </Animated.View>
-          </Pressable>
-        </View>
-      </SafeAreaView>
-    </View>
+              style={[tw`absolute top-1 left-[-5] w-5 h-4 rounded-full bg-[#27173A]` ,{transform: [{translateX: anim.interpolate({inputRange: [0 , 32],outputRange: [0 , 15]})},{scale: anim.interpolate({inputRange: [0, 32],outputRange: [0, 1]})}]}]}
+            />
+          </Animated.View>
+        </Pressable>
+      </View>
+    </SafeAreaView>
+  </View>
   );
 };
-
-const styles = StyleSheet.create({
-    cotnainer: {
-      flex: 1,
-    },
-    header: {
-      flexDirection: 'row',
-      justifyContent: 'flex-end',
-      paddingHorizontal: 16,
-    },
-    chip: {
-      width: 64,
-      height: 32,
-      borderRadius: 16,
-      backgroundColor: '#27173A',
-    },
-    ball: {
-      width: 24,
-      height: 24,
-      borderRadius: 12,
-      backgroundColor: '#FFC207',
-      position: 'absolute',
-      top: 4,
-      left: 4,
-      overflow: 'hidden',
-    },
-    shadow: {
-      width: 20,
-      height: 20,
-      borderRadius: 10,
-      backgroundColor: '#27173A',
-      position: 'absolute',
-      top: 2,
-      left: -20,
-    },
-  });
 
 export default Business; 

@@ -1,11 +1,11 @@
-import React, { useRef } from "react"
-import { Animated, Button, Easing, Image, ImageBackground, SafeAreaView, StyleSheet, Text, useWindowDimensions, View } from "react-native"
-import { FlatList } from "react-native-gesture-handler";
+import React, { useEffect, useRef } from "react"
+import { Animated, Button, Easing, ImageBackground, Text, useWindowDimensions, View } from "react-native"
+import { FlatList, ScrollView } from "react-native-gesture-handler";
 import tw from 'twrnc'; 
 
 export const AroundWorld = () => {
      
-    const fadeAnim = useRef(new Animated.Value(0)).current;
+    const randomClr = useRef(new Animated.Value(0)).current;
     const spinValue = useRef(new Animated.Value(0)).current;
 
     const Movies = [
@@ -35,23 +35,6 @@ export const AroundWorld = () => {
             url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBR18chqux6jhq-SAfpTCrkpsBbgnZEb1Nu86CGXc0&s'
         }
     ]
-
-    const fadeIn = () => {
-      Animated.timing(fadeAnim, {
-          toValue: 1,
-          duration: 3000,
-          useNativeDriver: false
-      }).start();
-     };
-
-  const fadeOut = () => {
-    Animated.timing(fadeAnim, {
-        toValue: 0,
-        duration: 2000,
-        useNativeDriver: false
-    }).start();
-    };
-
         Animated.timing(
          spinValue,
          {
@@ -60,7 +43,22 @@ export const AroundWorld = () => {
          easing: Easing.linear,
          useNativeDriver: true 
        }).start()
+       
+         const initSpin = () => {
+             Animated.timing(randomClr, {
+               toValue: 100,
+               duration: 1000,
+               useNativeDriver: false,
+             }).start();
+        }
 
+        const initRes = () => {
+            Animated.timing(randomClr, {
+                toValue: 0,
+                duration: 1000,
+                useNativeDriver: false,
+              }).start();
+        }
 
     const MovieItems = ({name , url, index , scrollX}: any) => {
       const dimensions = useWindowDimensions();
@@ -76,7 +74,7 @@ export const AroundWorld = () => {
       }); 
 
       return (
-            <View style={tw`flex flex-col justify-center items-center w-100`}>
+            <View style={tw`flex flex-col justify-start items-center w-100`}>
                 <ImageBackground source={{uri: url}} style={tw`flex justify-center items-center w-72 h-72`} blurRadius={40}>
                    <Animated.Image source={{uri: url}} style={{flex: 1 , justifyContent: 'center' , width: 144 , borderRadius: 5 , transform: [{scale: scale} , {rotate: rotate}]}}/>
                    <Text style={tw`text-green-500 text-sm`}>Data Name:{name}</Text>
@@ -91,42 +89,19 @@ export const AroundWorld = () => {
        )
     }; 
 
+        // <View style={tw`flex flex-col w-full justify-center items-center bg-white`}>
+        // <View style={tw`flex justify-center items-center mt-30 mb-10 w-full`}>
+        // <FlatList data={Movies} renderItem={renderItems} keyExtractor={key => key.id} scrollEnabled pagingEnabled showsHorizontalScrollIndicator={false} horizontal onScroll={e => spinValue.setValue(e.nativeEvent.contentOffset.x)}/>
+        // </View>
+        // </View>
+
     return (
-        <View style={tw`flex flex-col w-full justify-center items-center bg-white`}>
-        <View style={tw`flex justify-center items-center mt-30 mb-10 w-full`}>
-        <FlatList data={Movies} renderItem={renderItems} keyExtractor={key => key.id} scrollEnabled pagingEnabled showsHorizontalScrollIndicator={false} horizontal onScroll={e => spinValue.setValue(e.nativeEvent.contentOffset.x)}/>
-        </View>
-        <Animated.View
-        style={[styles.fadingContainer,{opacity: fadeAnim}
-        ]}
-      >
-        <Text style={styles.fadingText}>Fading View!</Text>
-         </Animated.View>
-         <Button title="Fade in" onPress={() => fadeIn()}/>
-         <Button title="Fade out" onPress={() => fadeOut()}/>
+        <View style={tw`w-full h-full justify-center items-center`}> 
+        <Button title="Rotate" onPress={() => initSpin()}/>
+        <Button title="Back" onPress={() => initRes()}/>
+        <Animated.View style={[tw`w-52 h-52 rounded-lg mt-10` , {backgroundColor: randomClr.interpolate({inputRange: [0,50,100] , outputRange:[`#${Math.floor(Math.random()*16777215).toString(16)}` , `#${Math.floor(Math.random()*16777215).toString(16)}`, `#${Math.floor(Math.random()*16777215).toString(16)}`]}) ,transform: [{translateX: randomClr} , {rotate: randomClr.interpolate({inputRange: [0 , 100] , outputRange:['0deg' , '360deg']})}] , opacity: randomClr.interpolate({inputRange:[0,50,100] , outputRange:[0,1,0]})}]}/>
         </View>
     )
 }; 
-
-const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      alignItems: "center",
-      justifyContent: "center"
-    },
-    fadingContainer: {
-      padding: 20,
-      backgroundColor: "gold"
-    },
-    fadingText: {
-      fontSize: 28
-    },
-    buttonRow: {
-      flexBasis: 100,
-      justifyContent: "space-evenly",
-      marginVertical: 16
-    }
-  });
-  
 
 export default AroundWorld; 
