@@ -28,12 +28,17 @@ const ls = new Schema({
      }, 
      comments: [{
       type: Schema.ObjectId, 
-      ref: "Comments", 
+      ref: "Comments",
      }], 
      type: {
          type: String, 
          required: true
-     }
+     }, 
+     genre: {
+        type: String, 
+        required: true
+     }, 
+     genres: [], 
 }, { timestamps: true });
 
 ls

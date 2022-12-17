@@ -20,7 +20,7 @@ postRt.get('/spec/:id' , async (req , res) => {
       {
          $group: {
             _id: req.params['id'], 
-            count: { $sum: { $size: "$comments"}}
+            count: { $sum: { $size: "$comments"}}, 
          }
       }
    ]);
@@ -84,7 +84,7 @@ postRt.post('/addCmt/:id/addReply/:repId/replies', async (req, res) => {
 });
 
 postRt.post("/post", async (req, res) => {
-   const { title, descrip, txt , postImg, userId , comments , type } = req.body;
+   const { title, descrip, txt , postImg, userId , comments , type , genre } = req.body;
    try {
      await newsPosts.create({
        title: title,
@@ -93,7 +93,9 @@ postRt.post("/post", async (req, res) => {
        postImg: postImg,
        author: userId,
        comments: comments, 
-       type: type
+       type: type, 
+       genre: genre,
+       genres: ['All' , 'Android' , 'Cricket' , 'Iphone' , 'Google'],  
      });
      res.send({
        message: "Post added",
