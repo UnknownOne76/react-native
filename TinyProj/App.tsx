@@ -12,6 +12,7 @@ import User from './screens/Prof';
 import Specific from './screens/Spec';
 import AroundWorld from './screens/World';
 import Business from './screens/Business';
+import { SelectProvider } from '@mobile-reality/react-native-select-pro';
 
 const App = () => {
   useEffect(() => {
@@ -50,12 +51,14 @@ const App = () => {
 
   return (
     <FsContextPrv>
+    <SelectProvider>
     <View style={{flex: 1 , width: windowWidth , height: windowHeight}}>
       <NavigationContainer> 
       <Navigator />
       </NavigationContainer>
       <Footer />
     </View>
+    </SelectProvider>
     </FsContextPrv>
   );
 };

@@ -38,7 +38,6 @@ const ls = new Schema({
         type: String, 
         required: true
      }, 
-     genres: [], 
 }, { timestamps: true });
 
 ls

@@ -14,12 +14,17 @@ type Props = {
 export const Home = ({navigation }: Props) => {
   
   const [news , setNews ] = useState<any>(undefined); 
+  const [gen, setGen] = useState<any>(null); 
 
   useEffect(() => {
     AXIOS.get('posts').then((res) => {
-      setNews(res.data.data);  
-    }).catch(err => console.log(err));
-  }, [news]);  
+      setNews(res.data.data);   
+    }).catch(err => console.log(err)); 
+
+    AXIOS.get('genres').then((res) => {
+       setGen(res.data.data); 
+    }).catch(err => console.log(err)); 
+  }, [news , gen]);  
 
   const Item = ({title}: any) => (
     <View style={tw`flex ml-2 justify-start items-center bg-white m-2 p-2 rounded-full w-auto`}>
@@ -36,7 +41,7 @@ export const Home = ({navigation }: Props) => {
     <View style={tw`flex flex-col justify-start w-11/12 mt-5`}> 
     <Text style={tw`text-[#072D4B] text-sm`}>Top Stories for you</Text>
     <View style={tw`flex w-full justify-start`}> 
-    <FlatList data={news !== undefined ? news[0].genres : ''} renderItem={renderItem} keyExtractor={item => item} horizontal pagingEnabled={true}/>
+    <FlatList data={gen !== null && Object.keys(gen).length !== 0 ?  gen[0].genres : ''} renderItem={renderItem} keyExtractor={item => item} horizontal pagingEnabled={true}/>
     </View>
     </View>
     <ScrollView style={tw`flex w-full`}> 

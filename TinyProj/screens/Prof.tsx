@@ -4,21 +4,21 @@ import tw from 'twrnc';
 import AXIOS from "../api";
 import { useEffect, useState } from "react";
 import { TextInput } from "react-native-gesture-handler";
-import RNPickerSelect from 'react-native-picker-select'; 
+import { Select } from '@mobile-reality/react-native-select-pro';
 
 export const User = ({navigation}: any) => {
 
     const [user , setUser] = useState<any>(null); 
     const [token , setToken] = useState<any>(null); 
-    const [type , setType] = useState<string>('');
-    const [gen , setGen] = useState<any>(); 
+    const [type , setType] = useState<any>(null);
+    const [gen , setGen] = useState<any>(null); 
     const types = [
-        {label: 'All' , value: 'All'}, 
-        {label: 'Around the World', value: 'World'}, 
-        {label: 'Business' , value: 'Business'}, 
-        {label: 'Health' , value: 'Hp'}, 
-        {label: 'Entertainment' , value: 'Enter'}, 
-        {label: 'Sports' , value: 'Sports'}
+        {value: 'All' ,label: 'All'}, 
+        {value: 'World',label: 'Around the World'}, 
+        {value: 'Business' ,label: 'Business' }, 
+        {value: 'Hp' ,label: 'Health'}, 
+        {value: 'Enter' , label: 'Entertainment'}, 
+        {value: 'Sports' ,label: 'Sports'}
     ]; 
 
     AsyncStorage.getItem('token' , (err , val) => {
@@ -40,15 +40,15 @@ export const User = ({navigation}: any) => {
         }
     }, [user , token]); 
 
-    const postNews = async () => {
+    const postNews = async () => { 
         await AXIOS.post('post' , {
             title: 'Welo', 
             descrip: 'Blah blah', 
             txt: 'Bdadwadwa', 
             userId: user._id, 
-            type: 'All', 
-            genre: 'Iphone', 
-        }).then((res) => console.log(res.data)).catch(err => console.log(err)); 
+            type: type, 
+            genre: gen, 
+        }).then(() => console.log('Added!')).catch(err => console.log(err)); 
     }
 
 
@@ -63,7 +63,10 @@ export const User = ({navigation}: any) => {
             <View style={tw`flex flex-col w-2/4 h-2/4 justify-center items-center`}>
                <Text> User Name: {user?.name} </Text>
                <Image source={{uri: user?.img}} style={{width: 100 , height: 100}}/>
-            <View style={tw`flex w-full justify-start items-center mt-10`}>
+            <Button title="Go back" onPress={() => navigation.goBack()}/>
+            <Button title="Log out" onPress={() => logOut()}/>
+            </View>
+            <View style={tw`flex w-full justify-center items-center mb-20`}> 
                 <Text>Post Center </Text>
                 <View style={tw`flex justify-center items-center`}>
                 <Text>Title</Text>
@@ -74,18 +77,15 @@ export const User = ({navigation}: any) => {
                 <TextInput placeholder="Write anything..."/>
                 <View style={tw`flex justify-center items-center`}> 
                 <Text>Type</Text>
-                <RNPickerSelect onValueChange={val => setType(val)} items={types}/>
+                <Select options={types} onSelect={(val) => setType(val?.value)}/>
                 <View style={tw`flex justify-center items-center ${type == 'All' ? 'flex' : 'hidden'}`}> 
                 <Text>Select Genre</Text>
-                <TextInput placeholder="Sub-type..." onTextInput={gen => setGen(gen)}/>
+                <TextInput placeholder="Sub-type..." onChangeText={txt => setGen(txt)}/>
                 </View>
                 <Button title="Post" onPress={() => postNews()}/>
                 </View>
                 </View>
             </View>
-            </View>
-            <Button title="Go back" onPress={() => navigation.goBack()}/>
-            <Button title="Log out" onPress={() => logOut()}/>
         </View>
     )
 }; 

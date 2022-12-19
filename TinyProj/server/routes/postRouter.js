@@ -1,5 +1,6 @@
 const exp = require('express'); 
 const cmts = require('../models/Comments');
+const genreTypes = require('../models/Genre');
 const newsPosts = require('../models/Posts'), postRt = exp.Router();
 
 postRt.get("/posts", async (req, res) => {
@@ -14,6 +15,15 @@ postRt.get("/posts", async (req, res) => {
        return 0;  
     }
   }) 
+
+  postRt.get('/genres' , async (req , res) => {
+      if ( req.body ) {
+         const data = await genreTypes.find({}); 
+         res.send({
+            data: data
+         })
+      }
+  })
 
 postRt.get('/spec/:id' , async (req , res) => {
    const length = await newsPosts.aggregate([
@@ -39,6 +49,13 @@ postRt.get('/spec/:id' , async (req , res) => {
       return 0; 
    }
 })
+
+postRt.get('/news/spec' , async (req , res) => {
+    const data = await newsPosts.aggregate([{$sample: {size: 3}}]);
+    res.send({
+       result: data
+    })
+}); 
 
 postRt.post('/addCmt/:id' , async (req , res) => {
     const comment = new cmts(req.body);  
@@ -85,27 +102,66 @@ postRt.post('/addCmt/:id/addReply/:repId/replies', async (req, res) => {
 
 postRt.post("/post", async (req, res) => {
    const { title, descrip, txt , postImg, userId , comments , type , genre } = req.body;
-   try {
-     await newsPosts.create({
-       title: title,
-       descrip: descrip,
-       txt: txt,
-       postImg: postImg,
-       author: userId,
-       comments: comments, 
-       type: type, 
-       genre: genre,
-       genres: ['All' , 'Android' , 'Cricket' , 'Iphone' , 'Google'],  
-     });
-     res.send({
-       message: "Post added",
-     });
-   } catch (e) {
-     res.send({
-       error: e,
-     });
-   }
- });
+   let genres; 
+
+   await genreTypes.find({}).then((data) => {
+       genres = data;  
+   })
+   console.log(typeof genres[0].genres); 
+
+   await newsPosts.find({}).limit(1).then(async(data) => {
+      if ( Object.keys(data).length === 0) {
+        await newsPosts.create({
+          title: title,
+          descrip: descrip,
+          txt: txt,
+          postImg: postImg,
+          author: userId,
+          comments: comments, 
+          type: type, 
+          genre: genre,  
+         }).then(() => {
+          res.send({
+            message: "News added!",
+            });
+         });
+      }
+      else {
+        if (Object.keys(data).length !== 0) {   
+          await newsPosts.create({
+           title: title,
+           descrip: descrip,
+           txt: txt,
+           postImg: postImg,
+           author: userId,
+           comments: comments, 
+           type: type, 
+           genre: genre,  
+          }).then(() => {
+           res.send({
+             message: "Post added",
+             });
+          });
+       }
+       else {
+         if ( genre !== null ) { 
+            await newsPosts.create({
+              title: title,
+              descrip: descrip,
+              txt: txt,
+              postImg: postImg,
+              author: userId,
+              comments: comments, 
+              type: type, 
+              genre: genre,  
+             }).then(() => {
+                res.send('News added!'); 
+             })
+        }
+      }
+     }
+   }); 
+  });
 
   postRt.delete('/spec/:id/delCmt/:delId' , async(req , res) => {
        await cmts.findByIdAndDelete({_id: req.params['delId']}).then(async() => {

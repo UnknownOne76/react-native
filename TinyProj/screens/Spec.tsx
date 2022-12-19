@@ -19,6 +19,8 @@ export const Specific = ({navigation , route}: any) => {
     const [data , setData] = useState<any>(null); 
     const [tog , setTog] = useState<any>(null); 
     const [rep , setRep] = useState<any>(null); 
+    const [random , setRandom] = useState<any>(null);
+    const [del , setDel] = useState<boolean>(false); 
     let userId: any = null;   
 
     const scrollToTop = () => {
@@ -27,12 +29,18 @@ export const Specific = ({navigation , route}: any) => {
           animated: true,
         });
       };
-
+    
     useEffect(() => {
+        AXIOS.get('news/spec').then((res) => {
+          setRandom(res.data.result); 
+        }); 
+    }, [navigation , route]); 
+
+    useEffect(() => { 
 
         AXIOS.get(`spec/${id}`).then((res) => { 
-            setData(res.data.data);  
-            setLen(res.data.len[0].count); 
+            setData(res.data.data); 
+            setLen(res.data.len[0].count);   
         })
 
         AsyncStorage.getItem('token' , (err , val) => {
@@ -97,13 +105,11 @@ export const Specific = ({navigation , route}: any) => {
     }
 
     const giveLike = async({cmtId}: any) => {
-
         await AXIOS.post('userDet', {
             token: token, 
         }).then((res) => {
             userId = res.data._id
         });
-
         
         await AXIOS.put(`addLike/${cmtId}` , {
             userId: userId
@@ -191,13 +197,29 @@ export const Specific = ({navigation , route}: any) => {
                 }):<View><Text>Loading...</Text></View>}
                 </View>
                 </View>
-            </View>:<View><Text>Loading...</Text></View>}
-            <View style={tw`flex flex-col w-full justify-center items-center`}>
+                <View style={tw`flex flex-col w-full justify-center items-center`}>
             <View style={tw`flex flex-row w-full justify-start items-center ml-10 mt-10`}>
-                <Text style={tw`text-[#072D4B] text-sm font-bold`}>More News for you</Text>
-                <View style={{flex: 1 , height: 1, backgroundColor: 'black' , marginLeft: 20 , marginHorizontal: 40}}></View> 
+            <Text style={tw`text-[#072D4B] text-sm font-bold`}>More News for you</Text>
+            <View style={{flex: 1 , height: 1, backgroundColor: 'black' , marginLeft: 20 , marginHorizontal: 40}}></View> 
             </View>
+            {random !== null ? random.map((x: any , i: number) => {
+                 return <TouchableOpacity key={i} onPress={() => navigation.navigate('Spec' , {id: x._id})} style={tw`border-b-2 border-green-500 m-5`}>    
+                 <View style={tw`flex flex-col w-11/12 justify-start items-center m-5`}> 
+                 <Text style={tw`text-[#072D4B] text-sm mb-2 mr-6`}>{x.title}</Text>
+                 <Text style={tw`text-[#072D4B] text-sm opacity-50 mb-5`}>{x.descrip}</Text>
+                 <Image source={{uri: x.postImg}} style={{width: 250 , height: 150}}/>
+                 </View>
+                 <View style={tw`flex flex-row justify-start items-center pl-4 w-auto pb-5`}>
+                    <Text style={tw`text-[#072D4B] opacity-40`}>{x.author.name}</Text>
+                    <Text style={tw`text-[#072D4B] opacity-40 pl-10`}>{moment(x.createdAt).fromNow()}</Text>
+                   <Ionicons name='share' size={16} color={"#0768B5"} style={tw`pl-20`}/>
+                   <Ionicons name='pocket' size={16} color={"#0768B5"} style={tw`pl-10`}/>
+                 </View>
+                 </TouchableOpacity>
+            }) : <View><Text>Loading...</Text></View>}
+            
             </View>
+            </View>:<View><Text>Loading...</Text></View>}
         </View>
         </ScrollView>
     )
