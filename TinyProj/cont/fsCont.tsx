@@ -5,6 +5,7 @@ import { useState , createContext , useEffect } from 'react';
 export type Context = {
    isLogged: boolean;
    setIsLogged: React.Dispatch<any>; 
+   token: string;
 }
 
 type Props = {
@@ -16,21 +17,24 @@ export const FsContext = createContext<null | Context>({} as Context);
 export const FsContextPrv = ({children}: Props) => {
 
    const [isLogged , setIsLogged] = useState<any>(false); 
+   const [token , setToken] = useState<any>(null); 
 
    useEffect(() => {
-      const authen = async () => {
-         if (await AsyncStorage.getItem('isLoggedIn') == null ) return setIsLogged(false); 
-         await AsyncStorage.getItem('isLoggedIn' , (err: any , val: any) => {
-            if ( err ) return console.log(`Error occured: ${err}`);
-            setIsLogged(JSON.parse(val));  
-         });   
-      }
-
-      authen(); 
+         if (AsyncStorage.getItem('isLoggedIn') === null ) { 
+            return setIsLogged(false);
+         }
+         else {
+            try { 
+               AsyncStorage.getItem('isLoggedIn').then((val: any) => {setIsLogged(JSON.parse(val))});  
+               AsyncStorage.getItem('token').then((val: any) => {setToken(val)});  
+            } catch(e) {
+               console.log(e); 
+            }
+         }
    }, [isLogged]); 
 
    return (
-      <FsContext.Provider value={{ isLogged , setIsLogged }}>{children}</FsContext.Provider>
+      <FsContext.Provider value={{ isLogged , setIsLogged , token}}>{children}</FsContext.Provider>
    ); 
 }; 
 

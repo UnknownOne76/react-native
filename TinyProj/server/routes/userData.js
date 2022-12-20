@@ -52,11 +52,11 @@ userRt.get("/", async (req, res) => {
  }); 
 
  userRt.post('/userDet' , async (req , res) => {
-    const { token } = await req.body; 
-    const user = jwt.verify(token , JWT_SECRET);  
-    await User.findOne({email: user.email}).then((data) => {
-      res.send(data); 
-    })
+    const { token } = await req.body;  
+      const user = jwt.verify(token , JWT_SECRET);
+      await User.findOne({email: user.email}).then((data) => {
+        res.send(data); 
+      })  
 }); 
 
 module.exports = userRt;

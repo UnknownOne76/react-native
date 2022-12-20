@@ -1,17 +1,18 @@
 import { Button, Image, Text, View } from "react-native"
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import tw from 'twrnc'; 
 import AXIOS from "../api";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { TextInput } from "react-native-gesture-handler";
 import { Select } from '@mobile-reality/react-native-select-pro';
+import { FsContext } from "../cont/fsCont";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const User = ({navigation}: any) => {
 
-    const [user , setUser] = useState<any>(null); 
-    const [token , setToken] = useState<any>(null); 
+    const [user , setUser] = useState<any>(null);  
     const [type , setType] = useState<any>(null);
     const [gen , setGen] = useState<any>(null); 
+    const fsCont = useContext(FsContext); 
     const types = [
         {value: 'All' ,label: 'All'}, 
         {value: 'World',label: 'Around the World'}, 
@@ -19,26 +20,15 @@ export const User = ({navigation}: any) => {
         {value: 'Hp' ,label: 'Health'}, 
         {value: 'Enter' , label: 'Entertainment'}, 
         {value: 'Sports' ,label: 'Sports'}
-    ]; 
-
-    AsyncStorage.getItem('token' , (err , val) => {
-        if (!err) {
-            return setToken(val); 
-        } 
-        else {
-           console.log(err); 
-        }
-    })
-
-    useEffect(() => { 
-        if ( token != null ) {       
-            AXIOS.post('userDet', {
-                token: token 
-            }).then((res) => {
-                setUser(res.data); 
-            });  
-        }
-    }, [user , token]); 
+    ];  
+        
+    useEffect(() => {     
+        AXIOS.post('userDet', {
+            token: fsCont?.token, 
+        }).then((res) => { 
+            return setUser(res.data); 
+        });  
+    }, [user]); 
 
     const postNews = async () => { 
         await AXIOS.post('post' , {
@@ -50,7 +40,6 @@ export const User = ({navigation}: any) => {
             genre: gen, 
         }).then(() => console.log('Added!')).catch(err => console.log(err)); 
     }
-
 
     const logOut = async () => {
         await AsyncStorage.setItem('isLoggedIn' , JSON.stringify(false)); 

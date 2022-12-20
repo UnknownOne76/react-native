@@ -2,25 +2,23 @@ import { Text, View , Image, TouchableOpacity, Alert } from "react-native"
 import AXIOS from "../api";
 import Ionicons from 'react-native-vector-icons/Feather'; 
 import tw from 'twrnc'; 
-import { useEffect , useRef, useState } from 'react'; 
+import { useContext, useEffect , useRef, useState } from 'react'; 
 import moment from "moment";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { FsContext } from "../cont/fsCont";
 
 export const Specific = ({navigation , route}: any) => {
-    const { id } = route.params;
+    const { id } = route.params , fsCont = useContext(FsContext); 
     const ref = useRef<any | null>(null);
     const [len , setLen] = useState<any>(null); 
     const [disp , setDisp] = useState<boolean>(false); 
     const [txt , setTxt] = useState<string>('');
     const [reply , setReply] = useState<string>('');
     const [nst , setNst] = useState<string>(''); 
-    const [token , setToken] = useState<any>(null); 
     const [data , setData] = useState<any>(null); 
     const [tog , setTog] = useState<any>(null); 
     const [rep , setRep] = useState<any>(null); 
     const [random , setRandom] = useState<any>(null);
-    const [del , setDel] = useState<boolean>(false); 
     let userId: any = null;   
 
     const scrollToTop = () => {
@@ -29,12 +27,6 @@ export const Specific = ({navigation , route}: any) => {
           animated: true,
         });
       };
-    
-    useEffect(() => {
-        AXIOS.get('news/spec').then((res) => {
-          setRandom(res.data.result); 
-        }); 
-    }, [navigation , route]); 
 
     useEffect(() => { 
 
@@ -43,19 +35,14 @@ export const Specific = ({navigation , route}: any) => {
             setLen(res.data.len[0].count);   
         })
 
-        AsyncStorage.getItem('token' , (err , val) => {
-            if (!err) {
-             return setToken(val); 
-            } 
-            else {
-             console.log(err); 
-            }; 
-        });
-    }, [data , token]);     
+        AXIOS.get('news/spec').then((res) => {
+            setRandom(res.data.result); 
+          }); 
+    }, [data , navigation , route]);     
 
     const postComment = async () => {
         await AXIOS.post('userDet', {
-            token: token, 
+            token: fsCont?.token, 
         }).then((res) => {
             userId = res.data._id
         });  
@@ -77,7 +64,7 @@ export const Specific = ({navigation , route}: any) => {
     const deleteThis = async({user , cmtId}: any) => {
     
         await AXIOS.post('userDet', {
-            token: token, 
+            token: fsCont?.token, 
         }).then((res) => {
             userId = res.data._id
         });
@@ -88,7 +75,7 @@ export const Specific = ({navigation , route}: any) => {
     const sendReply = async ({repId}: any) => {
     
         await AXIOS.post('userDet', {
-            token: token, 
+            token: fsCont?.token, 
         }).then((res) => {
             userId = res.data._id
         });
@@ -106,7 +93,7 @@ export const Specific = ({navigation , route}: any) => {
 
     const giveLike = async({cmtId}: any) => {
         await AXIOS.post('userDet', {
-            token: token, 
+            token: fsCont?.token, 
         }).then((res) => {
             userId = res.data._id
         });
@@ -119,7 +106,7 @@ export const Specific = ({navigation , route}: any) => {
     const disLike = async({cmtId}: any) => {
 
         await AXIOS.post('userDet', {
-            token: token, 
+            token: fsCont?.token, 
         }).then((res) => {
             userId = res.data._id
         });

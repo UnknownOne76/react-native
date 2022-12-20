@@ -13,6 +13,7 @@ import Specific from './screens/Spec';
 import AroundWorld from './screens/World';
 import Business from './screens/Business';
 import { SelectProvider } from '@mobile-reality/react-native-select-pro';
+import Health from './screens/Health';
 
 const App = () => {
   useEffect(() => {
@@ -36,6 +37,7 @@ const App = () => {
             <Stack.Screen name="Spec" component={Specific} options={{header: (e: any) => <Header navigation={e.navigation}/>}}/>
             <Stack.Screen name="World" component={AroundWorld} options={{header: (e: any) => <Header navigation={e.navigation}/>}}/>
             <Stack.Screen name="Business" component={Business}/>
+            <Stack.Screen name="Health" component={Health}/>
           </Stack.Navigator>
        )
      }

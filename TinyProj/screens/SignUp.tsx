@@ -32,7 +32,7 @@ export const SignUp = ({navigation}: any) => {
                         setPhoto(''); 
                         return Alert.alert('User has been already created.'); 
                     } 
-                    alert('Signed Up!'); 
+                     Alert.alert('Signed Up!'); 
                      setTimeout(() => {
                         navigation.navigate('Login'); 
                     } , 1500); 
@@ -64,7 +64,3 @@ export const SignUp = ({navigation}: any) => {
 }; 
 
 export default SignUp; 
-
-function alert(arg0: string) {
-    throw new Error("Function not implemented.");
-}
