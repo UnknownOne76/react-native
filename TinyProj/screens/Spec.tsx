@@ -8,7 +8,9 @@ import { ScrollView, TextInput } from "react-native-gesture-handler";
 import { FsContext } from "../cont/fsCont";
 
 export const Specific = ({navigation , route}: any) => {
-    const { id } = route.params , fsCont = useContext(FsContext); 
+
+    const { id } = route.params;
+    const fsCont = useContext(FsContext);  
     const ref = useRef<any | null>(null);
     const [len , setLen] = useState<any>(null); 
     const [disp , setDisp] = useState<boolean>(false); 
@@ -18,8 +20,7 @@ export const Specific = ({navigation , route}: any) => {
     const [data , setData] = useState<any>(null); 
     const [tog , setTog] = useState<any>(null); 
     const [rep , setRep] = useState<any>(null); 
-    const [random , setRandom] = useState<any>(null);
-    let userId: any = null;   
+    const [random , setRandom] = useState<any>(null); 
 
     const scrollToTop = () => {
         ref.current?.scrollTo({
@@ -28,28 +29,24 @@ export const Specific = ({navigation , route}: any) => {
         });
       };
 
-    useEffect(() => { 
+    useEffect(() => {
+        AXIOS.get('news/spec').then((res) => {
+            setRandom(res.data.result); 
+          }); 
+    }, [navigation, route]); 
 
+    useEffect(() => { 
         AXIOS.get(`spec/${id}`).then((res) => { 
             setData(res.data.data); 
             setLen(res.data.len[0].count);   
         })
-
-        AXIOS.get('news/spec').then((res) => {
-            setRandom(res.data.result); 
-          }); 
-    }, [data , navigation , route]);     
+    }, [data]);     
 
     const postComment = async () => {
-        await AXIOS.post('userDet', {
-            token: fsCont?.token, 
-        }).then((res) => {
-            userId = res.data._id
-        });  
 
-        if ( txt !== '' && userId !== null) {
+        if ( txt !== '' ) {
             await AXIOS.post(`addCmt/${id}` , {
-                author: userId, 
+                author: fsCont?.user._id, 
                 comment: txt, 
             }).then(() => { 
                 console.log('Sent.'); 
@@ -62,27 +59,14 @@ export const Specific = ({navigation , route}: any) => {
     };
 
     const deleteThis = async({user , cmtId}: any) => {
-    
-        await AXIOS.post('userDet', {
-            token: fsCont?.token, 
-        }).then((res) => {
-            userId = res.data._id
-        });
-
-        return userId == user ? await AXIOS.delete(`spec/${id}/delCmt/${cmtId}`).then(() => console.log('Deleted!')).catch(err => console.log(err)) : Alert.alert(`Sorry you can't delete this.`);
+        return fsCont?.user._id == user ? await AXIOS.delete(`spec/${id}/delCmt/${cmtId}`).then(() => console.log('Deleted!')).catch(err => console.log(err)) : Alert.alert(`Sorry you can't delete this.`);
     }; 
     
     const sendReply = async ({repId}: any) => {
-    
-        await AXIOS.post('userDet', {
-            token: fsCont?.token, 
-        }).then((res) => {
-            userId = res.data._id
-        });
 
         if ( reply !== '' || nst !== '') {
             await AXIOS.post(`addCmt/${id}/addReply/${repId}/replies` , {
-                author: userId, 
+                author: fsCont?.user._id, 
                 comment: reply === '' ? nst : reply, 
             }).then(() => console.log('Replied!')).then(() => setReply('')).then(() => setNst('')).catch((err) => console.log(err)); 
         }
@@ -92,27 +76,14 @@ export const Specific = ({navigation , route}: any) => {
     }
 
     const giveLike = async({cmtId}: any) => {
-        await AXIOS.post('userDet', {
-            token: fsCont?.token, 
-        }).then((res) => {
-            userId = res.data._id
-        });
-        
         await AXIOS.put(`addLike/${cmtId}` , {
-            userId: userId
+            userId: fsCont?.user._id
         }).then((res) => Alert.alert(res.data)).catch(err => console.log(err));
     }; 
 
     const disLike = async({cmtId}: any) => {
-
-        await AXIOS.post('userDet', {
-            token: fsCont?.token, 
-        }).then((res) => {
-            userId = res.data._id
-        });
-
         await AXIOS.put(`disLike/${cmtId}`, {
-            userId: userId, 
+            userId: fsCont?.user._id, 
         }).then((res) => Alert.alert(res.data)).catch(err => console.log(err)); 
     }
 

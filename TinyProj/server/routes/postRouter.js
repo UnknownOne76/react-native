@@ -3,9 +3,9 @@ const cmts = require('../models/Comments');
 const genreTypes = require('../models/Genre');
 const newsPosts = require('../models/Posts'), postRt = exp.Router();
 
-postRt.get("/posts", async (req, res) => {
+postRt.get("/posts/:id", async (req, res) => {  
     if (req.body) { 
-      const posts = await newsPosts.find({}).sort({_id: -1}).populate("author"); 
+      const posts = await newsPosts.find(req.params['id'] == 'null' ? {} : {genre: req.params['id']}).sort({_id: -1}).populate("author"); 
       res.send({
          data: posts,
       });
@@ -106,8 +106,7 @@ postRt.post("/post", async (req, res) => {
 
    await genreTypes.find({}).then((data) => {
        genres = data;  
-   })
-   console.log(typeof genres[0].genres); 
+   })  
 
    await newsPosts.find({}).limit(1).then(async(data) => {
       if ( Object.keys(data).length === 0) {
@@ -137,28 +136,18 @@ postRt.post("/post", async (req, res) => {
            comments: comments, 
            type: type, 
            genre: genre,  
-          }).then(() => {
-           res.send({
+          }).then(async() => {
+           if ( genres[0].genres.includes(genre)) {
+              return false;
+           }
+           else {
+              await genreTypes.findByIdAndUpdate({_id: '63a039d9b2152245f5cfbca8'} , {$push: {genres: genre}}); 
+           }
+           await res.send({
              message: "Post added",
              });
           });
        }
-       else {
-         if ( genre !== null ) { 
-            await newsPosts.create({
-              title: title,
-              descrip: descrip,
-              txt: txt,
-              postImg: postImg,
-              author: userId,
-              comments: comments, 
-              type: type, 
-              genre: genre,  
-             }).then(() => {
-                res.send('News added!'); 
-             })
-        }
-      }
      }
    }); 
   });

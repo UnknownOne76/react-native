@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Ionicons from 'react-native-vector-icons/Feather'; 
-import { FlatList, Text, View , Image } from "react-native"
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import { FlatList, Text, View , Image , TouchableOpacity } from "react-native"
+import { ScrollView } from "react-native-gesture-handler";
 import tw from 'twrnc';
 import AXIOS from "../api";
 import moment from "moment";
@@ -14,26 +14,29 @@ type Props = {
 export const Home = ({navigation }: Props) => {
   
   const [news , setNews ] = useState<any>(undefined); 
-  const [gen, setGen] = useState<any>(null); 
+  const [gen, setGen] = useState<any>(null);
+  const [id , setId] = useState<any>(null);    
 
   useEffect(() => {
-    AXIOS.get('posts').then((res) => {
+    AXIOS.get(`posts/${id}`).then((res) => {
       setNews(res.data.data);   
     }).catch(err => console.log(err)); 
 
     AXIOS.get('genres').then((res) => {
        setGen(res.data.data); 
-    }).catch(err => console.log(err)); 
-  }, [news , gen]);  
+    }).catch(err => console.log(err));  
+  }, [news]);  
 
-  const Item = ({title}: any) => (
-    <View style={tw`flex ml-2 justify-start items-center bg-white m-2 p-2 rounded-full w-auto`}>
-      <Text style={tw`text-[#072D4B]`}>{title}</Text>
+  const Item = ({title , onPress}: any) => (
+    <TouchableOpacity onPress={onPress}> 
+    <View style={tw`flex justify-start items-center ${title === id ? 'bg-[#2F9FF8]' : 'bg-white'} m-2 p-2 rounded-full w-auto`}>
+      <Text style={tw`${title === id ? 'text-white' : 'text-[#072D4B]'}`}>{title}</Text>
     </View>
+    </TouchableOpacity>
   );
 
   const renderItem = ({item}: any) => (
-    <Item title={item}/>
+    <Item title={item} onPress={() => setId(item)}/>
   );    
 
     return (
@@ -41,7 +44,7 @@ export const Home = ({navigation }: Props) => {
     <View style={tw`flex flex-col justify-start w-11/12 mt-5`}> 
     <Text style={tw`text-[#072D4B] text-sm`}>Top Stories for you</Text>
     <View style={tw`flex w-full justify-start`}> 
-    <FlatList data={gen !== null && Object.keys(gen).length !== 0 ?  gen[0].genres : ''} renderItem={renderItem} keyExtractor={item => item} horizontal pagingEnabled={true}/>
+    <FlatList data={gen !== null && Object.keys(gen).length !== 0 ?  gen[0].genres : ''} renderItem={renderItem} keyExtractor={item => item} horizontal pagingEnabled={true} extraData={id}/>
     </View>
     </View>
     <ScrollView style={tw`flex w-full`}> 

@@ -1,7 +1,7 @@
-import { Button, Image, Text, View } from "react-native"
+import { Alert, Button, Image, Text, View } from "react-native"
 import tw from 'twrnc'; 
 import AXIOS from "../api";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { TextInput } from "react-native-gesture-handler";
 import { Select } from '@mobile-reality/react-native-select-pro';
 import { FsContext } from "../cont/fsCont";
@@ -9,9 +9,11 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const User = ({navigation}: any) => {
 
-    const [user , setUser] = useState<any>(null);  
     const [type , setType] = useState<any>(null);
     const [gen , setGen] = useState<any>(null); 
+    const [title , setTitle] = useState<any>(''); 
+    const [descrip , setDescrip] = useState<any>(''); 
+    const [txt , setTxt] = useState<any>(''); 
     const fsCont = useContext(FsContext); 
     const types = [
         {value: 'All' ,label: 'All'}, 
@@ -20,25 +22,25 @@ export const User = ({navigation}: any) => {
         {value: 'Hp' ,label: 'Health'}, 
         {value: 'Enter' , label: 'Entertainment'}, 
         {value: 'Sports' ,label: 'Sports'}
-    ];  
-        
-    useEffect(() => {     
-        AXIOS.post('userDet', {
-            token: fsCont?.token, 
-        }).then((res) => { 
-            return setUser(res.data); 
-        });  
-    }, [user]); 
+    ];   
 
     const postNews = async () => { 
-        await AXIOS.post('post' , {
-            title: 'Welo', 
-            descrip: 'Blah blah', 
-            txt: 'Bdadwadwa', 
-            userId: user._id, 
-            type: type, 
-            genre: gen, 
-        }).then(() => console.log('Added!')).catch(err => console.log(err)); 
+        if ( title !== '' && descrip !== '' && txt !== '') { 
+            await AXIOS.post('post' , {
+                title: title, 
+                descrip: descrip, 
+                txt: txt, 
+                userId: fsCont?.user._id, 
+                type: type, 
+                genre: gen, 
+            }).then(() => console.log('Added!')).catch(err => console.log(err)); 
+        }
+        else {
+            Alert.alert('Missing any or not filled.'); 
+            setTitle(''); 
+            setDescrip(''); 
+            setTxt('');
+        }
     }
 
     const logOut = async () => {
@@ -50,8 +52,8 @@ export const User = ({navigation}: any) => {
         <View style={tw`flex flex-col justify-center items-center w-full h-full`}>
             <Text> User Profile </Text>
             <View style={tw`flex flex-col w-2/4 h-2/4 justify-center items-center`}>
-               <Text> User Name: {user?.name} </Text>
-               <Image source={{uri: user?.img}} style={{width: 100 , height: 100}}/>
+               <Text> User Name: {fsCont?.user.name} </Text>
+               <Image source={{uri: fsCont?.user.img}} style={{width: 100 , height: 100}}/>
             <Button title="Go back" onPress={() => navigation.goBack()}/>
             <Button title="Log out" onPress={() => logOut()}/>
             </View>
@@ -59,17 +61,17 @@ export const User = ({navigation}: any) => {
                 <Text>Post Center </Text>
                 <View style={tw`flex justify-center items-center`}>
                 <Text>Title</Text>
-                <TextInput placeholder="Title of News..."/>
+                <TextInput placeholder="Title of News..." onTextInput={txt => setTitle(txt)} value={title}/>
                 <Text>Description</Text>
-                <TextInput placeholder="Description of News..."/>
+                <TextInput placeholder="Description of News..." onTextInput={txt => setDescrip(txt)} value={descrip}/>
                 <Text>Texts</Text>
-                <TextInput placeholder="Write anything..."/>
+                <TextInput placeholder="Write anything..." onTextInput={txt => setTxt(txt)} value={txt}/>
                 <View style={tw`flex justify-center items-center`}> 
                 <Text>Type</Text>
                 <Select options={types} onSelect={(val) => setType(val?.value)}/>
                 <View style={tw`flex justify-center items-center ${type == 'All' ? 'flex' : 'hidden'}`}> 
                 <Text>Select Genre</Text>
-                <TextInput placeholder="Sub-type..." onChangeText={txt => setGen(txt)}/>
+                <TextInput placeholder="Sub-type..." onChangeText={txt => setGen(txt)} autoCapitalize={"words"}/>
                 </View>
                 <Button title="Post" onPress={() => postNews()}/>
                 </View>

@@ -3,7 +3,6 @@ import { Alert, Text, View , Animated } from "react-native"
 import { Gesture, GestureDetector, TapGestureHandler } from "react-native-gesture-handler";
 import { runOnJS } from "react-native-reanimated";
 import tw from 'twrnc'; 
-import { FsContext } from "../cont/fsCont";
 import SwipeGesture from "./swp";
 
 export const Health = () => {
