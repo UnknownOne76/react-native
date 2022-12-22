@@ -1,4 +1,4 @@
-import { Alert, Button, Image, Text, View } from "react-native"
+import { Alert, Button, Image, Text, TouchableOpacity, View } from "react-native"
 import tw from 'twrnc'; 
 import AXIOS from "../api";
 import { useContext, useState } from "react";
@@ -7,7 +7,7 @@ import { Select } from '@mobile-reality/react-native-select-pro';
 import { FsContext } from "../cont/fsCont";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export const User = ({navigation}: any) => {
+export const User = ({navigation , route}: any) => {
 
     const [type , setType] = useState<any>(null);
     const [gen , setGen] = useState<any>(null); 
@@ -25,7 +25,7 @@ export const User = ({navigation}: any) => {
     ];   
 
     const postNews = async () => { 
-        if ( title !== '' && descrip !== '' && txt !== '') { 
+        if ( title !== '' && descrip !== '' && txt !== '' && type == null) { 
             await AXIOS.post('post' , {
                 title: title, 
                 descrip: descrip, 
@@ -50,10 +50,14 @@ export const User = ({navigation}: any) => {
 
     return (
         <View style={tw`flex flex-col justify-center items-center w-full h-full`}>
-            <Text> User Profile </Text>
             <View style={tw`flex flex-col w-2/4 h-2/4 justify-center items-center`}>
-               <Text> User Name: {fsCont?.user.name} </Text>
-               <Image source={{uri: fsCont?.user.img}} style={{width: 100 , height: 100}}/>
+               <Text> User Profile </Text>
+               <Text style={tw`m-5 text-lg`}> User Name: {fsCont?.user.name} </Text>
+               <Image source={{uri: fsCont?.user.img}} style={[tw`rounded-lg` ,{width: 100 , height: 100}]}/>
+               <View style={tw`flex flex-row w-full justify-center items-center m-5`}>
+                 <TouchableOpacity onPress={() => navigation.navigate('Followers')} style={tw`flex text-sm w-2/4`}><Text>Followers: {fsCont?.user.followers.length}</Text></TouchableOpacity>
+                 <TouchableOpacity onPress={() => navigation.navigate('Followings')} style={tw`flex text-sm`}><Text>Following: {fsCont?.user.following.length}</Text></TouchableOpacity>
+               </View>
             <Button title="Go back" onPress={() => navigation.goBack()}/>
             <Button title="Log out" onPress={() => logOut()}/>
             </View>

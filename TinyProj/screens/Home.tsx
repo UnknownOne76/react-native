@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Ionicons from 'react-native-vector-icons/Feather'; 
 import { FlatList, Text, View , Image , TouchableOpacity } from "react-native"
 import { ScrollView } from "react-native-gesture-handler";
@@ -13,7 +13,8 @@ type Props = {
 
 export const Home = ({navigation }: Props) => {
   
-  const [news , setNews ] = useState<any>(undefined); 
+  const [news , setNews ] = useState<any>(undefined);
+  const [users , setUsers] = useState<any>(null); 
   const [gen, setGen] = useState<any>(null);
   const [id , setId] = useState<any>(null);    
 
@@ -25,7 +26,11 @@ export const Home = ({navigation }: Props) => {
     AXIOS.get('genres').then((res) => {
        setGen(res.data.data); 
     }).catch(err => console.log(err));  
-  }, [news]);  
+
+    AXIOS.get('').then((res) => {
+        setUsers(res.data.data); 
+    }); 
+  }, [news]);   
 
   const Item = ({title , onPress}: any) => (
     <TouchableOpacity onPress={onPress}> 
@@ -37,7 +42,17 @@ export const Home = ({navigation }: Props) => {
 
   const renderItem = ({item}: any) => (
     <Item title={item} onPress={() => setId(item)}/>
-  );    
+  );
+
+  const RenderEach = ({item}: any) => (
+    <View style={tw`flex flex-col w-36 h-44 justify-center items-center m-5 border-2 border-[#2F9FF8]`}>
+    <Image source={{uri: item.img}} style={[{width: 70 , height: 70} , tw`rounded-full m-2`]}/>
+    <Text style={tw`text-sm text-[#072D4B]`}>{item.name}</Text>
+    <TouchableOpacity style={tw`flex justify-center items-center bg-[#2F9FF8] w-28 h-8 mt-2 rounded-lg`} onPress={() => console.log('Followed!')}>
+      <Text style={tw`text-white text-sm`}>Follow</Text>
+    </TouchableOpacity>
+    </View>
+    ); 
 
     return (
     <View style={tw`flex flex-col w-full justify-center items-center bg-[#F4F9F8]`}> 
@@ -64,6 +79,13 @@ export const Home = ({navigation }: Props) => {
      </View>
      </TouchableOpacity>
     }): <View><Text>Loading...</Text></View>}
+    <View style={tw`flex flex-col w-full justify-center items-center m-10`}>
+      <View style={tw`flex flex-row w-11/12 justify-start items-center`}> 
+      <Ionicons name="feather" size={24} color={"#072D4B"}/>
+      <Text style={tw`text-sm text-[#072D4B] ml-4`}>Creators you should follow</Text>
+      </View>
+      <FlatList data={users !== null ? users : ''} renderItem={({item}: any) => <RenderEach item={item}/>} keyExtractor={item => item._id} horizontal={true} pagingEnabled={true}/>
+    </View>
     </View>
     </ScrollView>
     </View>

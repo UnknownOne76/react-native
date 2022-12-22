@@ -14,6 +14,9 @@ import AroundWorld from './screens/World';
 import Business from './screens/Business';
 import { SelectProvider } from '@mobile-reality/react-native-select-pro';
 import Health from './screens/Health';
+import Followers from './comps/followers';
+import Followings from './comps/followings';
+import Entertainment from './screens/Enter';
 
 const App = () => {
   useEffect(() => {
@@ -38,6 +41,9 @@ const App = () => {
             <Stack.Screen name="World" component={AroundWorld} options={{header: (e: any) => <Header navigation={e.navigation}/>}}/>
             <Stack.Screen name="Business" component={Business}/>
             <Stack.Screen name="Health" component={Health}/>
+            <Stack.Screen name="Entertainment" component={Entertainment}/>
+            <Stack.Screen name="Followers" component={Followers}/>
+            <Stack.Screen name="Followings" component={Followings}/>
           </Stack.Navigator>
        )
      }
