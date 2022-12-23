@@ -156,6 +156,13 @@ postRt.post("/post", async (req, res) => {
        await cmts.findByIdAndDelete({_id: req.params['delId']}).then(async() => {
            await newsPosts.findByIdAndUpdate({_id: req.params['id']} , {$pullAll: {comments: [{_id: req.params['delId']}]}}).then((rs) => console.log(rs) , res.send('Deleted!')).catch((err) => console.log(err)); 
        })
+  });  
+
+  postRt.get('/specUser/:id' , async(req , res) => {
+      const data = await newsPosts.find({author: req.params['id']}).sort({_id: -1}).populate('author'); 
+      res.send({
+         result: data
+      }); 
   }); 
 
 module.exports = postRt; 

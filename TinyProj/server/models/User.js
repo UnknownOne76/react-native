@@ -1,6 +1,5 @@
 const mong = require('mongoose');
 const { Schema , model } = mong; 
-const Populate = require('../autopop');
 
 const user = new Schema({
     name: String,
@@ -29,12 +28,6 @@ const user = new Schema({
         required: true, 
     }]     
 });
-
-user
-  .pre('findOne', Populate('following'))
-  .pre('find', Populate('following'))
-  .pre('findOne', Populate('followers'))
-  .pre('find', Populate('followers'));
 
 const User = model('Users' , user); 
 module.exports = User; 

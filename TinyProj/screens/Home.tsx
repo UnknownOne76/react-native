@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Ionicons from 'react-native-vector-icons/Feather'; 
-import { FlatList, Text, View , Image , TouchableOpacity } from "react-native"
+import { FlatList, Text, View , Image , TouchableOpacity, Alert } from "react-native"
 import { ScrollView } from "react-native-gesture-handler";
 import tw from 'twrnc';
 import AXIOS from "../api";
 import moment from "moment";
+import { FsContext } from "../cont/fsCont";
 
 type Props = {
    route: any;
@@ -13,6 +14,7 @@ type Props = {
 
 export const Home = ({navigation }: Props) => {
   
+  const fsCont = useContext(FsContext); 
   const [news , setNews ] = useState<any>(undefined);
   const [users , setUsers] = useState<any>(null); 
   const [gen, setGen] = useState<any>(null);
@@ -32,6 +34,17 @@ export const Home = ({navigation }: Props) => {
     }); 
   }, [news]);   
 
+  const followUser = async({id}: any) => { 
+    if ( fsCont?.user._id == id) {Alert.alert(`Can't follow yourself.`)}  
+    else { 
+    await AXIOS.put(`follow/${id}` , {
+       userId: fsCont?.user._id
+    }).then((res) => {
+       Alert.alert(res.data);  
+    }).catch(err => console.log(err));
+   } 
+  }
+
   const Item = ({title , onPress}: any) => (
     <TouchableOpacity onPress={onPress}> 
     <View style={tw`flex justify-start items-center ${title === id ? 'bg-[#2F9FF8]' : 'bg-white'} m-2 p-2 rounded-full w-auto`}>
@@ -48,7 +61,7 @@ export const Home = ({navigation }: Props) => {
     <View style={tw`flex flex-col w-36 h-44 justify-center items-center m-5 border-2 border-[#2F9FF8]`}>
     <Image source={{uri: item.img}} style={[{width: 70 , height: 70} , tw`rounded-full m-2`]}/>
     <Text style={tw`text-sm text-[#072D4B]`}>{item.name}</Text>
-    <TouchableOpacity style={tw`flex justify-center items-center bg-[#2F9FF8] w-28 h-8 mt-2 rounded-lg`} onPress={() => console.log('Followed!')}>
+    <TouchableOpacity style={tw`flex justify-center items-center bg-[#2F9FF8] w-28 h-8 mt-2 rounded-lg`} onPress={() => followUser({id: item._id})}>
       <Text style={tw`text-white text-sm`}>Follow</Text>
     </TouchableOpacity>
     </View>
@@ -84,7 +97,7 @@ export const Home = ({navigation }: Props) => {
       <Ionicons name="feather" size={24} color={"#072D4B"}/>
       <Text style={tw`text-sm text-[#072D4B] ml-4`}>Creators you should follow</Text>
       </View>
-      <FlatList data={users !== null ? users : ''} renderItem={({item}: any) => <RenderEach item={item}/>} keyExtractor={item => item._id} horizontal={true} pagingEnabled={true}/>
+      <FlatList data={users !== null ? users : ''} renderItem={({item}: any) => <RenderEach item={item}/>} keyExtractor={item => item._id} horizontal={true}/>
     </View>
     </View>
     </ScrollView>

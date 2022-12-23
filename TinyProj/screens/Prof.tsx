@@ -7,7 +7,7 @@ import { Select } from '@mobile-reality/react-native-select-pro';
 import { FsContext } from "../cont/fsCont";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export const User = ({navigation , route}: any) => {
+export const User = ({navigation}: any) => {
 
     const [type , setType] = useState<any>(null);
     const [gen , setGen] = useState<any>(null); 
@@ -25,7 +25,7 @@ export const User = ({navigation , route}: any) => {
     ];   
 
     const postNews = async () => { 
-        if ( title !== '' && descrip !== '' && txt !== '' && type == null) { 
+        if ( title !== '' && descrip !== '' && txt !== '' && type != null) { 
             await AXIOS.post('post' , {
                 title: title, 
                 descrip: descrip, 
@@ -65,11 +65,11 @@ export const User = ({navigation , route}: any) => {
                 <Text>Post Center </Text>
                 <View style={tw`flex justify-center items-center`}>
                 <Text>Title</Text>
-                <TextInput placeholder="Title of News..." onTextInput={txt => setTitle(txt)} value={title}/>
+                <TextInput placeholder="Title of News..." onChangeText={txt => setTitle(txt)} value={title}/>
                 <Text>Description</Text>
-                <TextInput placeholder="Description of News..." onTextInput={txt => setDescrip(txt)} value={descrip}/>
+                <TextInput placeholder="Description of News..." onChangeText={txt => setDescrip(txt)} value={descrip}/>
                 <Text>Texts</Text>
-                <TextInput placeholder="Write anything..." onTextInput={txt => setTxt(txt)} value={txt}/>
+                <TextInput placeholder="Write anything..." onChangeText={txt => setTxt(txt)} value={txt}/>
                 <View style={tw`flex justify-center items-center`}> 
                 <Text>Type</Text>
                 <Select options={types} onSelect={(val) => setType(val?.value)}/>

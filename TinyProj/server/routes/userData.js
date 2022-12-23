@@ -3,7 +3,7 @@ const User = require('../models/User') , jwt = require('jsonwebtoken') , userRt 
 const JWT_SECRET = "LtscoEMqX3iYSBP8LR10MHxKGcyIT4pxYgT1TBx2PUx9VM33tBgrwvB0cdmEep4owqNL5JWwdmUobWvIj69eX5kDCtNKkiHTxh31EGcvuMxr1P"; 
 
 userRt.get("/", async (req, res) => {
-    const users = await User.find().lean();
+    const users = await User.find().populate('followers').populate('following').lean();
     res.send({
       data: users,
     });
@@ -54,7 +54,7 @@ userRt.get("/", async (req, res) => {
  userRt.post('/userDet' , async (req , res) => {
     const { token } = await req.body;    
     const user = jwt.verify(token , JWT_SECRET);
-    await User.findOne({email: user.email}).then((data) => {
+    await User.findOne({email: user.email}).populate('followers').populate('following').then((data) => {
       res.send(data); 
     });   
 }); 

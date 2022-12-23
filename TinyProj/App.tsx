@@ -17,6 +17,7 @@ import Health from './screens/Health';
 import Followers from './comps/followers';
 import Followings from './comps/followings';
 import Entertainment from './screens/Enter';
+import SpecUser from './screens/specUser';
 
 const App = () => {
   useEffect(() => {
@@ -44,6 +45,7 @@ const App = () => {
             <Stack.Screen name="Entertainment" component={Entertainment}/>
             <Stack.Screen name="Followers" component={Followers}/>
             <Stack.Screen name="Followings" component={Followings}/>
+            <Stack.Screen name="SpecUser" component={SpecUser}/>
           </Stack.Navigator>
        )
      }
