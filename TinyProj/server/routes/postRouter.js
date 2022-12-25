@@ -5,7 +5,7 @@ const newsPosts = require('../models/Posts'), postRt = exp.Router();
 
 postRt.get("/posts/:id", async (req, res) => {  
     if (req.body) { 
-      const posts = await newsPosts.find(req.params['id'] == 'null' ? {} : {genre: req.params['id']}).sort({_id: -1}).populate("author"); 
+      const posts = await newsPosts.find(req.params['id'] == 'null' ? {type: 'All'} : {type: 'All' , genre: req.params['id']}).sort({_id: -1}).populate("author"); 
       res.send({
          data: posts,
       });
@@ -15,6 +15,41 @@ postRt.get("/posts/:id", async (req, res) => {
        return 0;  
     }
   }) 
+
+ postRt.get("/world" , async(req , res) => {
+     const data = await newsPosts.find({type: 'World'}).sort({_id: -1}).populate('author'); 
+     res.send({
+        world: data,
+     })
+ }); 
+
+ postRt.get("/business" , async(req , res) => {
+   const data = await newsPosts.find({type: 'Business'}).sort({_id: -1}).populate('author'); 
+   res.send({
+      business: data,
+   });
+ }); 
+
+ postRt.get("/health" , async(req , res) => {
+   const data = await newsPosts.find({type: 'World'}).sort({_id: -1}).populate('author'); 
+   res.send({
+      health: data,
+   });
+ }); 
+
+ postRt.get("/entertain" , async(req , res) => {
+   const data = await newsPosts.find({type: 'Enter'}).sort({_id: -1}).populate('author'); 
+   res.send({
+      enter: data,
+   });
+ }); 
+
+ postRt.get("/sports" , async(req , res) => {
+   const data = await newsPosts.find({type: 'Sports'}).sort({_id: -1}).populate('author'); 
+   res.send({
+      sprts: data,
+   });
+ }); 
 
   postRt.get('/genres' , async (req , res) => {
       if ( req.body ) {
@@ -52,6 +87,7 @@ postRt.get('/spec/:id' , async (req , res) => {
 
 postRt.get('/news/spec' , async (req , res) => {
     const data = await newsPosts.aggregate([{$sample: {size: 3}}]);
+    await newsPosts.populate(data , {path: 'author'}); 
     res.send({
        result: data
     })
@@ -154,7 +190,7 @@ postRt.post("/post", async (req, res) => {
 
   postRt.delete('/spec/:id/delCmt/:delId' , async(req , res) => {
        await cmts.findByIdAndDelete({_id: req.params['delId']}).then(async() => {
-           await newsPosts.findByIdAndUpdate({_id: req.params['id']} , {$pullAll: {comments: [{_id: req.params['delId']}]}}).then((rs) => console.log(rs) , res.send('Deleted!')).catch((err) => console.log(err)); 
+           await newsPosts.findByIdAndUpdate({_id: req.params['id']} , {$pullAll: {comments: [{_id: req.params['delId']}]}}).then((rs) => console.log('Deleted') , res.send('Deleted!')).catch((err) => console.log(err)); 
        })
   });  
 

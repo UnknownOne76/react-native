@@ -26,6 +26,9 @@ const user = new Schema({
         type: Schema.ObjectId, 
         ref: 'Users', 
         required: true, 
+    }], 
+    notifications: [{
+        content: {type: String, required: true}, 
     }]     
 });
 

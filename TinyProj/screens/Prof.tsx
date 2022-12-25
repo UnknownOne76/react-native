@@ -25,7 +25,7 @@ export const User = ({navigation}: any) => {
     ];   
 
     const postNews = async () => { 
-        if ( title !== '' && descrip !== '' && txt !== '' && type != null) { 
+        if ( title !== '' && descrip !== '' && txt !== '' && type == 'All') { 
             await AXIOS.post('post' , {
                 title: title, 
                 descrip: descrip, 
@@ -33,6 +33,15 @@ export const User = ({navigation}: any) => {
                 userId: fsCont?.user._id, 
                 type: type, 
                 genre: gen, 
+            }).then(() => console.log('Added!')).catch(err => console.log(err)); 
+        }
+        else if ( title !== '' && descrip !== '' && txt !== '' && type != 'All') { 
+            await AXIOS.post('post' , {
+                title: title, 
+                descrip: descrip, 
+                txt: txt, 
+                userId: fsCont?.user._id, 
+                type: type,  
             }).then(() => console.log('Added!')).catch(err => console.log(err)); 
         }
         else {
