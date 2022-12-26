@@ -9,6 +9,14 @@ userRt.get("/", async (req, res) => {
     });
   });
 
+  userRt.get('/notif/:id' , async(req , res) => {
+    res.send('tbc...'); 
+   })
+
+  userRt.post('/notif/:id' , async(req , res) => {
+      await User.findByIdAndUpdate({_id: req.params['id']}, {$push: {notifications: {content: 'Uhm'}}}).then(() => res.send('Sent!')).catch(err => console.log(err));     
+  })
+
   userRt.post("/users", async (req, res) => {
     const { name, email , password , img } = req.body;
     const oldUser = await User.findOne({email: email});

@@ -16,9 +16,9 @@ export const Health = () => {
         }
       });
 
-      useEffect(() => {
-         crashlytics().crash(); 
-      }, [crashlytics]); 
+      // useEffect(() => {
+      //    crashlytics().crash(); 
+      // }, [crashlytics]); 
       
     return (
         <View style={tw`flex flex-col w-full h-full justify-center items-center`}>
