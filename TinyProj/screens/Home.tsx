@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import Ionicons from 'react-native-vector-icons/Feather'; 
-import { FlatList, Text, View , Image , TouchableOpacity, Alert } from "react-native"
-import { ScrollView } from "react-native-gesture-handler";
+import { FlatList, Text, View , Image , Alert } from "react-native"
+import { ScrollView , TouchableOpacity} from "react-native-gesture-handler";
 import tw from 'twrnc';
 import AXIOS from "../api";
 import moment from "moment";
@@ -19,7 +19,6 @@ export const Home = ({navigation }: Props) => {
   const [users , setUsers] = useState<any>(null); 
   const [gen, setGen] = useState<any>(null);
   const [id , setId] = useState<any>(null);    
-
   useEffect(() => {
     AXIOS.get(`posts/${id}`).then((res) => {
       setNews(res.data.data);   
@@ -32,7 +31,7 @@ export const Home = ({navigation }: Props) => {
     AXIOS.get('').then((res) => {
         setUsers(res.data.data); 
     }); 
-  }, [news]);   
+  }, [id]);   
 
   const followUser = async({id}: any) => { 
     if ( fsCont?.user._id == id) {Alert.alert(`Can't follow yourself.`)}  

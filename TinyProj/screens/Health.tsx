@@ -1,4 +1,4 @@
-import { useContext, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { Alert, Text, View , Animated, Button } from "react-native"
 import { Gesture, GestureDetector, TapGestureHandler } from "react-native-gesture-handler";
 import { runOnJS } from "react-native-reanimated";
@@ -15,6 +15,10 @@ export const Health = () => {
            runOnJS(Alert.alert)(`Long pressed for ${(e.duration/1000)%60} seconds!`); 
         }
       });
+
+      useEffect(() => {
+         crashlytics().crash(); 
+      }, [crashlytics]); 
       
     return (
         <View style={tw`flex flex-col w-full h-full justify-center items-center`}>
