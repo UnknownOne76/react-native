@@ -9,12 +9,25 @@ userRt.get("/", async (req, res) => {
     });
   });
 
-  userRt.get('/notif/:id' , async(req , res) => {
-    res.send('tbc...'); 
+  userRt.get('/user/notif/:id' , async(req , res) => {
+      let notif;
+      await User.findOne({_id: req.params['id']}).then((x) => {
+         notif = x.notifications;   
+      });
+      res.send({
+         data: notif, 
+      }) 
    })
 
   userRt.post('/notif/:id' , async(req , res) => {
-      await User.findByIdAndUpdate({_id: req.params['id']}, {$push: {notifications: {content: 'Uhm'}}}).then(() => res.send('Sent!')).catch(err => console.log(err));     
+      const { content , id } = await req.body; 
+      await User.findByIdAndUpdate({_id: req.params['id']}, {$push: {notifications: {content: content, id: id}}}).then(() => res.send('Sent!')).catch(err => console.log(err));     
+  })
+
+  userRt.put('/notif/del/:id' , async (req , res) => {
+      await User.findByIdAndUpdate({_id: req.params['id']} , {$pull: {notifications: {_id: req.body.id}}}).then(() => {
+         res.send('Deleted.'); 
+      }); 
   })
 
   userRt.post("/users", async (req, res) => {

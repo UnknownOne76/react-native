@@ -28,9 +28,9 @@ const user = new Schema({
         required: true, 
     }], 
     notifications: [{
-        content: {type: String, required: true}, 
-    }], 
-    totalSize:{type: Number, required: true, default: 0}     
+        content: {type: String, required: true},
+        id: {type: String , required: true},  
+    }],   
 });
 
 const User = model('Users' , user); 

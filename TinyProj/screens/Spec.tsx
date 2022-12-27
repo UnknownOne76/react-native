@@ -51,6 +51,11 @@ export const Specific = ({navigation , route}: any) => {
             }).then(() => { 
                 console.log('Sent.'); 
                 setTxt('');
+            }).then(async() => {
+                fsCont?.user.name != data.author.name ? await AXIOS.post(`notif/${data.author._id}` , {
+                    content: `${fsCont?.user.name} has just commented on your post!`, 
+                    id: id
+                }) : console.log(`Aborted. Coz of it's own user.`);   
             })
         }
         else {
@@ -68,7 +73,7 @@ export const Specific = ({navigation , route}: any) => {
             await AXIOS.post(`addCmt/${id}/addReply/${repId}/replies` , {
                 author: fsCont?.user._id, 
                 comment: reply === '' && nst !== '' ? nst : reply, 
-            }).then(() => console.log('Replied!')).then(() => setReply('')).then(() => setNst('')).catch((err) => console.log(err)); 
+            }).then(() => console.log('Replied!')).then(() => setReply('')).then(() => setNst('')).then(async() => {fsCont?.user.name != data.author.name ? await AXIOS.post(`notif/${data.author._id}` , {content: `${fsCont?.user.name} has just replied to your post!`, id: id}) : console.log(`Aborted. Coz of it's own user.`)}).catch((err) => console.log(err)); 
         }
         else {
             Alert.alert('Reply should not be empty!');  

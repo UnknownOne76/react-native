@@ -61,7 +61,7 @@ export const User = ({navigation}: any) => {
         <View style={tw`flex flex-col justify-center items-center w-full h-full`}>
             <View style={tw`flex flex-col w-2/4 h-2/4 justify-center items-center`}>
                <Text> User Profile </Text>
-               <Text style={tw`m-5 text-lg`}> User Name: {fsCont?.user.name} </Text>
+               <Text style={tw`flex m-5 text-sm`}>User Name: {fsCont?.user.name}</Text>
                <Image source={{uri: fsCont?.user.img}} style={[tw`rounded-lg` ,{width: 100 , height: 100}]}/>
                <View style={tw`flex flex-row w-full justify-center items-center m-5`}>
                  <TouchableOpacity onPress={() => navigation.navigate('Followers')} style={tw`flex text-sm w-2/4`}><Text>Followers: {fsCont?.user.followers.length}</Text></TouchableOpacity>

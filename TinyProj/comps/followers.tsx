@@ -9,8 +9,8 @@ export const Followers = ({navigation}: any) => {
     const fsCont = useContext(FsContext); 
 
     const followUser = async({id}: any) => {
-        await AXIOS.put(`follow/${id}` , {userId: fsCont?.user._id}).then((res) => {
-            Alert.alert(res.data); 
+        await AXIOS.put(`follow/${id}` , {userId: fsCont?.user._id}).then(async(res) => {
+            await AXIOS.post(`notif/${id}` , {id: fsCont?.user._id , content: `${fsCont?.user.name} has just followed you!`}).then(() => Alert.alert(res.data)); 
         }); 
     }; 
 
