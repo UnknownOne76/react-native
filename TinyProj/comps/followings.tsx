@@ -10,7 +10,7 @@ export const Followings = ({navigation}: any) => {
 
     const unFollow = async ({id}: any) => {
         await AXIOS.put(`unfollow/${id}` , {userId: fsCont?.user._id}).then(async(res) => {
-            await AXIOS.post(`notif/${id}` , {id: fsCont?.user._id , content: `${fsCont?.user.name} has just unfollowed you!`}).then(() => Alert.alert(res.data)); 
+            await AXIOS.post(`notif/${id}` , {id: fsCont?.user._id , content: `${fsCont?.user.name} has just unfollowed you!`}).then(() => {Alert.alert(res.data), fsCont?.setFol(Math.floor(Math.random() * 100))}); 
         }).catch(err => console.log(err)); 
     };
     

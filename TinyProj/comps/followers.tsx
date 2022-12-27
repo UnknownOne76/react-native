@@ -6,11 +6,11 @@ import { FsContext } from "../cont/fsCont";
 import AXIOS from "../api";
 
 export const Followers = ({navigation}: any) => {
-    const fsCont = useContext(FsContext); 
+    const fsCont = useContext(FsContext);
 
     const followUser = async({id}: any) => {
         await AXIOS.put(`follow/${id}` , {userId: fsCont?.user._id}).then(async(res) => {
-            await AXIOS.post(`notif/${id}` , {id: fsCont?.user._id , content: `${fsCont?.user.name} has just followed you!`}).then(() => Alert.alert(res.data)); 
+            await AXIOS.post(`notif/${id}` , {id: fsCont?.user._id , content: `${fsCont?.user.name} has just followed you!`}).then(() => {Alert.alert(res.data) , fsCont?.setFol(Math.floor(Math.random() * 100))}); 
         }); 
     }; 
 

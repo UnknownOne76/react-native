@@ -39,7 +39,8 @@ export const Home = ({navigation }: Props) => {
     await AXIOS.put(`follow/${id}` , {
        userId: fsCont?.user._id
     }).then((res) => {
-       Alert.alert(res.data);  
+       Alert.alert(res.data); 
+       fsCont?.setFol(Math.floor(Math.random() * 100));  
     }).catch(err => console.log(err));
    } 
   }

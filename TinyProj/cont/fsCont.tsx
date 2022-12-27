@@ -7,6 +7,7 @@ export type Context = {
    isLogged: boolean;
    setIsLogged: React.Dispatch<any>; 
    token: string;
+   setFol: React.Dispatch<React.SetStateAction<number>>; 
    user: any;
 }
 
@@ -21,6 +22,7 @@ export const FsContextPrv = ({children}: Props) => {
    const [isLogged , setIsLogged] = useState<any>(false); 
    const [token , setToken] = useState<any>(null); 
    const [user , setUser] = useState<any>(null); 
+   const [fol , setFol] = useState<number>(0); 
 
    useEffect(() => {
    if (AsyncStorage.getItem('isLoggedIn') === null ) { 
@@ -28,17 +30,17 @@ export const FsContextPrv = ({children}: Props) => {
    }
    else {
          AsyncStorage.getItem('isLoggedIn').then((val: any) => {setIsLogged(JSON.parse(val))});  
-         AsyncStorage.getItem('token').then(async(val: any) => setToken(val));
+         AsyncStorage.getItem('token').then((val: any) => setToken(val));
          if ( token !== null ) {
             AXIOS.post('userDet' , {
                token: token
             }).then((res) => setUser(res.data));  
           }; 
          };
-   } , [isLogged , token]);   
+   } , [isLogged , token, fol]); 
    
    return (
-      <FsContext.Provider value={{ isLogged , setIsLogged , token , user}}>{children}</FsContext.Provider>
+      <FsContext.Provider value={{ isLogged , setIsLogged , token , user , setFol}}>{children}</FsContext.Provider>
    ); 
 }; 
 

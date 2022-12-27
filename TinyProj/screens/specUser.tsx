@@ -34,7 +34,7 @@ export const SpecUser = ({navigation , route}: any) => {
            <Ionicons name='pocket' size={16} color={"#0768B5"} style={tw`pl-10`}/>
          </View>
          </TouchableOpacity>
-        }): <View><Text>Loading...</Text></View>}
+        }): <View><Text>No News from this User.</Text></View>}
         </View>
         </ScrollView>
     )

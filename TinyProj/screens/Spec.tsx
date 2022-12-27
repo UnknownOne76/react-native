@@ -168,7 +168,7 @@ export const Specific = ({navigation , route}: any) => {
             <View style={{flex: 1 , height: 1, backgroundColor: 'black' , marginLeft: 20 , marginHorizontal: 40}}></View> 
             </View>
             {random !== null ? random.map((x: any , i: number) => {
-                 return <TouchableOpacity key={i} onPress={() => navigation.navigate('Spec' , {id: x._id})} style={tw`border-b-2 border-green-500 m-5`}>    
+                 return <TouchableOpacity key={i} onPress={() => navigation.navigate('Spec' , {id: x._id})} style={tw`border-b-2 border-[#2F9FF8] m-5`}>    
                  <View style={tw`flex flex-col w-11/12 justify-start items-center m-5`}> 
                  <Text style={tw`text-[#072D4B] text-sm mb-2 mr-6`}>{x.title}</Text>
                  <Text style={tw`text-[#072D4B] text-sm opacity-50 mb-5`}>{x.descrip}</Text>

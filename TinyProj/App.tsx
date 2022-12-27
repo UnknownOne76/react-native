@@ -37,10 +37,10 @@ const App = () => {
      if (fsCont?.isLogged) {
        return (
           <Stack.Navigator initialRouteName='HomeScreen'>
-            <Stack.Screen name="HomeScreen" component={BurgerBar} options={{ header: (e: any) => <Header navigation={e.navigation} />}} />
+            <Stack.Screen name="HomeScreen" component={BurgerBar} options={{ header: (e: any) => <Header navigation={e.navigation} />}}/>
             <Stack.Screen name="User" component={User} options={{ headerShown: false }} />
             <Stack.Screen name="Spec" component={Specific} options={{header: (e: any) => <Header navigation={e.navigation}/>}}/>
-            <Stack.Screen name="World" component={AroundWorld} options={{header: (e: any) => <Header navigation={e.navigation}/>}}/>
+            <Stack.Screen name="World" component={AroundWorld}/>
             <Stack.Screen name="Business" component={Business}/>
             <Stack.Screen name="Health" component={Health}/>
             <Stack.Screen name="Entertainment" component={Entertainment}/>
@@ -54,8 +54,8 @@ const App = () => {
      else {
        return (
           <Stack.Navigator initialRouteName='Login'>
-            <Stack.Screen name="Login" component={SignIn} />
-            <Stack.Screen name="Register" component={SignUp} /> 
+            <Stack.Screen name="Login" component={SignIn} options={{headerShown: false}}/>
+            <Stack.Screen name="Register" component={SignUp}  options={{headerShown: false}}/> 
           </Stack.Navigator>
        )
      }
