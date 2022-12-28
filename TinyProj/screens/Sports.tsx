@@ -6,19 +6,20 @@ import tw from 'twrnc';
 import moment from "moment";
 import Ionicons from 'react-native-vector-icons/Feather'; 
 
-export const Entertainment = ({navigation}: any) => {
-    
-    const [ent , setEnt] = useState<any>(null); 
+export const Sports = ({navigation}: any) => {
+
+    const [sprt , setSprt] = useState<any>(null); 
+
     useEffect(() => {
-       AXIOS.get('entertain').then((res) => {
-         setEnt(res.data.enter); 
-       })
-    }, []); 
+        AXIOS.get('sports').then((res) => {
+          setSprt(res.data.sprts); 
+        })
+     }, []); 
 
     return (
-      <ScrollView>
-      <View style={tw`flex flex-col w-11/12 justify-center items-center bg-white m-5`}> 
-        {ent !== null && ent.length !== 0 ? ent.map((x: any , i: number) => {
+        <ScrollView>
+         <View style={tw`flex flex-col w-11/12 justify-center items-center bg-white m-5`}> 
+        {sprt !== null && sprt.length !== 0 ? sprt.map((x: any , i: number) => {
          return <TouchableOpacity key={i} onPress={() => navigation.navigate('Spec' , {id: x._id})} style={tw`border-b-2 border-[#2F9FF8] m-5`}>    
         <View style={tw`flex flex-col w-11/12 justify-start items-center m-5`}> 
         <Text style={tw`text-[#072D4B] text-sm mb-2 mr-6`}>{x.title}</Text>
@@ -32,10 +33,8 @@ export const Entertainment = ({navigation}: any) => {
         <Ionicons name='pocket' size={16} color={"#0768B5"} style={tw`pl-10`}/>
         </View>
         </TouchableOpacity>
-        }): <View><Text>No news from Entertainment.</Text></View>}
+        }): <View><Text>No news from Sports</Text></View>}
         </View>
-      </ScrollView>
+        </ScrollView>
     )
-}; 
-
-export default Entertainment; 
+}

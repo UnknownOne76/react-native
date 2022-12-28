@@ -31,7 +31,7 @@ postRt.get("/posts/:id", async (req, res) => {
  }); 
 
  postRt.get("/health" , async(req , res) => {
-   const data = await newsPosts.find({type: 'World'}).sort({_id: -1}).populate('author'); 
+   const data = await newsPosts.find({type: 'Hp'}).sort({_id: -1}).populate('author'); 
    res.send({
       health: data,
    });

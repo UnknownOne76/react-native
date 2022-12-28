@@ -1,46 +1,40 @@
-import { useContext, useEffect, useRef } from "react";
-import { Alert, Text, View , Animated, Button } from "react-native"
-import { Gesture, GestureDetector, TapGestureHandler } from "react-native-gesture-handler";
-import { runOnJS } from "react-native-reanimated";
+import { useEffect, useState } from "react";
+import { Image, Text, View } from "react-native"
+import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import AXIOS from "../api";
 import tw from 'twrnc'; 
-import SwipeGesture from "./swp";
-import analytics from '@react-native-firebase/analytics'
-import crashlytics from '@react-native-firebase/crashlytics';
+import moment from "moment";
+import Ionicons from 'react-native-vector-icons/Feather'; 
 
-export const Health = () => {
-    const double = useRef();  
+export const Health = ({navigation}: any) => {
 
-    const longPressGesture = Gesture.LongPress().onEnd((e, success) => {
-        if (success) {
-           runOnJS(Alert.alert)(`Long pressed for ${(e.duration/1000)%60} seconds!`); 
-        }
-      });
+    const [hp , setHp] = useState<any>(null); 
+    useEffect(() => {
+      AXIOS.get('health').then((res) => {
+         setHp(res.data.health); 
+      })
+    }, []); 
 
-      // useEffect(() => {
-      //    crashlytics().crash(); 
-      // }, [crashlytics]); 
-      
     return (
-        <View style={tw`flex flex-col w-full h-full justify-center items-center`}>
-            {/* <Text>Progress-1</Text>
-            <GestureDetector gesture={longPressGesture}> 
-            <TapGestureHandler onActivated={() => Alert.alert('Single Tap!')} waitFor={double}>
-                <TapGestureHandler ref={double} numberOfTaps={2} onActivated={() => Alert.alert('Doube Tap!')}> 
-               <Text> Tap me </Text>
-               </TapGestureHandler>
-            </TapGestureHandler>
-            </GestureDetector>
-            <SwipeGesture /> */}
-            <View>
-        <Button title="Press me" onPress={async () =>
-          await analytics().logSelectContent({
-            content_type: 'clothing',
-            item_id: 'abcd',
-          })
-        }
-      />
-    </View>
-    </View>
+       <ScrollView>
+       <View style={tw`flex flex-col w-11/12 justify-center items-center bg-white m-5`}> 
+        {hp !== null && hp.length !== 0 ? hp.map((x: any , i: number) => {
+         return <TouchableOpacity key={i} onPress={() => navigation.navigate('Spec' , {id: x._id})} style={tw`border-b-2 border-[#2F9FF8] m-5`}>    
+        <View style={tw`flex flex-col w-11/12 justify-start items-center m-5`}> 
+        <Text style={tw`text-[#072D4B] text-sm mb-2 mr-6`}>{x.title}</Text>
+        <Text style={tw`text-[#072D4B] text-sm opacity-50 mb-5`}>{x.descrip}</Text>
+        <Image source={{uri: x.postImg}} style={{width: 250 , height: 150}}/>
+        </View>
+        <View style={tw`flex flex-row justify-start items-center pb-5 w-auto`}>
+        <Text style={tw`text-[#072D4B] opacity-40`}>{x.author.name}</Text>
+        <Text style={tw`text-[#072D4B] opacity-40 pl-10`}>{moment(x.createdAt).fromNow()}</Text>
+        <Ionicons name='share' size={16} color={"#0768B5"} style={tw`pl-20`}/>
+        <Ionicons name='pocket' size={16} color={"#0768B5"} style={tw`pl-10`}/>
+        </View>
+        </TouchableOpacity>
+        }): <View><Text>No news from Health.</Text></View>}
+        </View>
+       </ScrollView>
     )
 }; 
 

@@ -115,7 +115,7 @@ export const Specific = ({navigation , route}: any) => {
         <View style={tw`bg-white w-full`}> 
             {data !== null ? <View style={tw`flex flex-col w-full p-5 justify-start items-start`}>
                 <Text style={tw`text-xl text-[#072D4B] mt-2 mb-4`}>{data.title}</Text>
-                <View style={tw`bg-[#2F9FF8] opacity-20 rounded-md ${data.genre ? 'flex' : 'hidden'}`}><Text style={tw`text-blue-500 text-sm p-1 font-bold`}>{data.genre}</Text></View>
+                <View style={tw`bg-[#2F9FF8] rounded-md ${data.genre ? 'flex' : 'hidden'}`}><Text style={tw`text-white text-sm p-1 font-bold`}>{data.genre}</Text></View>
                 <Text style={tw`text-[#072D4B] opacity-60 mt-5 mb-5 text-sm`}>{data.descrip}</Text>
                 <Image source={{uri: data.postImg}} style={{width: 327, height: 183}}/>
                 <Text style={tw`text-[#072D4B] opacity-60 mt-5`}>{data.txt}</Text>

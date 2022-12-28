@@ -6,6 +6,7 @@ import Entertainment from '../screens/Enter';
 import Health from '../screens/Health';
 import Home from '../screens/Home';
 import Notification from '../screens/Notification';
+import { Sports } from '../screens/Sports';
 import AroundWorld from '../screens/World';
 
 export const BurgerBar = () => {
@@ -21,7 +22,7 @@ export const BurgerBar = () => {
         <Drawer.Screen name='Business'  options={{drawerIcon: ({color}) => (<Ionicons name='briefcase' size={24} color={color}/>)}} component={Business}/>
         <Drawer.Screen name='Health'  options={{drawerIcon: ({color}) => (<Ionicons name='activity' size={24} color={color}/>)}} component={Health}/>
         <Drawer.Screen name='Entertainment'  options={{drawerIcon: ({color}) => (<Ionicons name='play-circle' size={24} color={color}/>)}} component={Entertainment}/>
-        <Drawer.Screen name='Sports'  options={{drawerIcon: ({color}) => (<Ionicons name='award' size={24} color={color}/>)}} component={Home}/>
+        <Drawer.Screen name='Sports'  options={{drawerIcon: ({color}) => (<Ionicons name='award' size={24} color={color}/>)}} component={Sports}/>
         <Drawer.Screen name='Discussion'  options={{drawerIcon: ({color}) => (<Ionicons name='message-circle' size={24} color={color}/>)}} component={Home}/>
         <Drawer.Screen name='Notifications'  options={{drawerIcon: ({color}) => (<Ionicons name='bell' size={24} color={color}/>)}} component={Notification}/>
         <Drawer.Screen name='News Feed Settings'  options={{drawerIcon: ({color}) => (<Ionicons name='settings' size={24} color={color}/>)}} component={Home}/>

@@ -84,12 +84,12 @@ export const Home = ({navigation }: Props) => {
      <Text style={tw`text-[#072D4B] text-sm opacity-50 mb-5`}>{x.descrip}</Text>
      <Image source={{uri: x.postImg}} style={{width: 250 , height: 150}}/>
      </View>
-     <View style={tw`flex flex-row justify-start items-center pl-4 w-auto pb-5`}>
+     <View style={tw`flex flex-row justify-start items-center pb-5 w-auto`}>
         <Text style={tw`text-[#072D4B] opacity-40`}>{x.author.name}</Text>
         <Text style={tw`text-[#072D4B] opacity-40 pl-10`}>{moment(x.createdAt).fromNow()}</Text>
        <Ionicons name='share' size={16} color={"#0768B5"} style={tw`pl-20`}/>
        <Ionicons name='pocket' size={16} color={"#0768B5"} style={tw`pl-10`}/>
-     </View>
+       </View>
      </TouchableOpacity>
     }): <View><Text>Loading...</Text></View>}
     <View style={tw`flex flex-col w-full justify-center items-center m-10`}>

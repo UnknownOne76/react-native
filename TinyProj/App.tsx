@@ -19,6 +19,7 @@ import Followings from './comps/followings';
 import Entertainment from './screens/Enter';
 import SpecUser from './screens/specUser';
 import Notification from './screens/Notification';
+import { Sports } from './screens/Sports';
 
 const App = () => {
   useEffect(() => {
@@ -44,6 +45,7 @@ const App = () => {
             <Stack.Screen name="Business" component={Business}/>
             <Stack.Screen name="Health" component={Health}/>
             <Stack.Screen name="Entertainment" component={Entertainment}/>
+            <Stack.Screen name="Sports" component={Sports}/>
             <Stack.Screen name="Notification" component={Notification}/>
             <Stack.Screen name="Followers" component={Followers}/>
             <Stack.Screen name="Followings" component={Followings}/>
