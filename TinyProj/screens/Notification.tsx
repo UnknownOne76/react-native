@@ -29,7 +29,7 @@ export const Notification = ({navigation}: any) => {
             {notif != null && notif.length != 0 ? notif.map((x: any , i: number) => { 
                 return (
                     <TouchableOpacity key={i} style={tw`flex w-full justify-center items-center m-5`} onPress={() => navIt({specId: x.id , id: x._id , nav: x.content})}>
-                       <Text>Info: {x.content}</Text>
+                       <Text style={tw`text-[#2F9FF8] text-sm`}>Info: {x.content}</Text>
                     </TouchableOpacity>
                 )
             }): <View><Text>Currently no Notifications.</Text></View>}

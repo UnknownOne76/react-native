@@ -8,6 +8,7 @@ import Home from '../screens/Home';
 import Notification from '../screens/Notification';
 import { Sports } from '../screens/Sports';
 import AroundWorld from '../screens/World';
+import Specific from '../screens/Spec';
 
 export const BurgerBar = () => {
 
@@ -26,6 +27,7 @@ export const BurgerBar = () => {
         <Drawer.Screen name='Discussion'  options={{drawerIcon: ({color}) => (<Ionicons name='message-circle' size={24} color={color}/>)}} component={Home}/>
         <Drawer.Screen name='Notifications'  options={{drawerIcon: ({color}) => (<Ionicons name='bell' size={24} color={color}/>)}} component={Notification}/>
         <Drawer.Screen name='News Feed Settings'  options={{drawerIcon: ({color}) => (<Ionicons name='settings' size={24} color={color}/>)}} component={Home}/>
+        <Drawer.Screen name="Spec" component={Specific} options={{drawerItemStyle: { height: 0 }}}/>
         </Drawer.Navigator>
     )
 }; 

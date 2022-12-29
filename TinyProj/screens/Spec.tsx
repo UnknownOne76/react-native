@@ -123,7 +123,7 @@ export const Specific = ({navigation , route}: any) => {
                     <Text style={tw`text-[#072D4B] opacity-30 text-sm`}>Published {moment(data.createdAt).format('lll')}</Text>
                     <Text style={tw`text-[#072D4B] font-bold text-sm mb-5`}>by {data.author.name}</Text>
                     <Text style={tw`underline text-sm text-[#2F9FF8]`} onPress={() => scrollToTop()}>Back to Top</Text>
-                    <Text style={tw`text-sm text-[#2F9FF8] mt-5`} onPress={() => navigation.navigate('HomeScreen')}> Back to Home </Text>
+                    <Text style={tw`text-sm text-[#2F9FF8] mt-5`} onPress={() => navigation.navigate('Top Stories')}> Back to Home </Text>
                 </View>
                 <View style={tw`flex flex-col w-full justify-start mt-10`}>
                 <View style={tw`flex flex-row w-full justify-center items-center mb-5`}> 
