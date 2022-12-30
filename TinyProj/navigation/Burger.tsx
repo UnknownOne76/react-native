@@ -9,6 +9,8 @@ import Notification from '../screens/Notification';
 import { Sports } from '../screens/Sports';
 import AroundWorld from '../screens/World';
 import Specific from '../screens/Spec';
+import Discussion from '../screens/Discuss';
+import Setting from '../screens/Setting';
 
 export const BurgerBar = () => {
 
@@ -24,9 +26,9 @@ export const BurgerBar = () => {
         <Drawer.Screen name='Health'  options={{drawerIcon: ({color}) => (<Ionicons name='activity' size={24} color={color}/>)}} component={Health}/>
         <Drawer.Screen name='Entertainment'  options={{drawerIcon: ({color}) => (<Ionicons name='play-circle' size={24} color={color}/>)}} component={Entertainment}/>
         <Drawer.Screen name='Sports'  options={{drawerIcon: ({color}) => (<Ionicons name='award' size={24} color={color}/>)}} component={Sports}/>
-        <Drawer.Screen name='Discussion'  options={{drawerIcon: ({color}) => (<Ionicons name='message-circle' size={24} color={color}/>)}} component={Home}/>
+        <Drawer.Screen name='Discussion'  options={{drawerIcon: ({color}) => (<Ionicons name='message-circle' size={24} color={color}/>)}} component={Discussion}/>
         <Drawer.Screen name='Notifications'  options={{drawerIcon: ({color}) => (<Ionicons name='bell' size={24} color={color}/>)}} component={Notification}/>
-        <Drawer.Screen name='News Feed Settings'  options={{drawerIcon: ({color}) => (<Ionicons name='settings' size={24} color={color}/>)}} component={Home}/>
+        <Drawer.Screen name='News Feed Settings'  options={{drawerIcon: ({color}) => (<Ionicons name='settings' size={24} color={color}/>)}} component={Setting}/>
         <Drawer.Screen name="Spec" component={Specific} options={{drawerItemStyle: { height: 0 }}}/>
         </Drawer.Navigator>
     )

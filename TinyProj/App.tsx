@@ -20,6 +20,8 @@ import Entertainment from './screens/Enter';
 import SpecUser from './screens/specUser';
 import Notification from './screens/Notification';
 import { Sports } from './screens/Sports';
+import Discussion from './screens/Discuss';
+import Setting from './screens/Setting';
 
 const App = () => {
   useEffect(() => {
@@ -50,6 +52,8 @@ const App = () => {
             <Stack.Screen name="Followers" component={Followers}/>
             <Stack.Screen name="Followings" component={Followings}/>
             <Stack.Screen name="SpecUser" component={SpecUser}/>
+            <Stack.Screen name="Discussion" component={Discussion}/>
+            <Stack.Screen name="Setting" component={Setting}/>
           </Stack.Navigator>
        )
      }
